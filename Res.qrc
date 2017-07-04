@@ -1,0 +1,37 @@
+<RCC>
+    <qresource prefix="/system_scan">
+        <file alias="find_ico">Res/system_scan/find.ico</file>
+        <file alias="file">Res/system_scan/file.png</file>
+        <file alias="bk">Res/system_scan/bk.png</file>
+        <file alias="exist">Res/system_scan/exist.png</file>
+    </qresource>
+    <qresource prefix="/main">
+        <file alias="logo">Res/logo.jpg</file>
+        <file alias="reg">Res/reg.png</file>
+        <file alias="home">Res/home.png</file>
+        <file alias="pcScan">Res/pcScan.png</file>
+        <file alias="fileRepair">Res/fileRepair.png</file>
+        <file alias="settings">Res/settings.png</file>
+        <file alias="close">Res/zdh.png</file>
+        <file alias="min">Res/zxh.png</file>
+        <file alias="home2">Res/home2.png</file>
+        <file alias="pcScan2">Res/pcScan2.png</file>
+        <file alias="settings2">Res/settings2.png</file>
+        <file alias="fileRepair2">Res/fileRepair2.png</file>
+        <file alias="inno">Res/inno_logo.ico</file>
+        <file alias="diskClean">Res/diskClean.png</file>
+        <file alias="diskClean2">Res/diskClean2.png</file>
+    </qresource>
+    <qresource prefix="/home">
+        <file alias="scan">Res/home/scan.png</file>
+        <file alias="pc">Res/home/pc.png</file>
+        <file alias="watch">Res/home/watch.png</file>
+        <file alias="overview_1">Res/home/overview_1.jpg</file>
+    </qresource>
+    <qresource prefix="/register">
+        <file alias="bk">Res/register/bk.png</file>
+        <file alias="buy">Res/register/buy.png</file>
+        <file alias="reg">Res/register/reg.png</file>
+        <file alias="close">Res/register/x.png</file>
+    </qresource>
+</RCC>
