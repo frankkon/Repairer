@@ -10,7 +10,7 @@ class WidgetRegister : public QWidget
 {
     Q_OBJECT
 public:
-    explicit WidgetRegister(QWidget *parent = 0);
+    explicit WidgetRegister(QWidget* parent = 0);
 
 signals:
 

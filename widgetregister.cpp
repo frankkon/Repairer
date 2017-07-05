@@ -6,7 +6,7 @@
 #include <QDesktopServices>
 #include <QUrl>
 
-WidgetRegister::WidgetRegister(QWidget *parent) :
+WidgetRegister::WidgetRegister(QWidget* parent) :
     QWidget(parent)
 {
     m_pBtnRegister = new QPushButton(this);
@@ -49,18 +49,18 @@ WidgetRegister::WidgetRegister(QWidget *parent) :
 
     QPixmap pixmap(":/register/bk");
     QPalette palette;
-    palette.setBrush( QPalette::Window, QBrush(pixmap) );
+    palette.setBrush(QPalette::Window, QBrush(pixmap));
     setPalette(palette);
     setAutoFillBackground(true);
 
-    m_pEdtKey->setGeometry( 111, 216, 563, 33 );
-    m_pBtnRegister->setGeometry( 253, 266, 218, 45 );
-    m_pBtnBuy->setGeometry( 253, 442, 218, 45 );
-    m_pBtnClose->setGeometry( 741, 8, 23, 22 );
+    m_pEdtKey->setGeometry(111, 216, 563, 33);
+    m_pBtnRegister->setGeometry(253, 266, 218, 45);
+    m_pBtnBuy->setGeometry(253, 442, 218, 45);
+    m_pBtnClose->setGeometry(741, 8, 23, 22);
 
-    connect( m_pBtnBuy, &QPushButton::clicked, this, &WidgetRegister::buy );
-    connect( m_pBtnRegister, &QPushButton::clicked, this, &WidgetRegister::registerKey );
-    connect( m_pBtnClose, &QPushButton::clicked, this, &WidgetRegister::closeDialog );
+    connect(m_pBtnBuy, &QPushButton::clicked, this, &WidgetRegister::buy);
+    connect(m_pBtnRegister, &QPushButton::clicked, this, &WidgetRegister::registerKey);
+    connect(m_pBtnClose, &QPushButton::clicked, this, &WidgetRegister::closeDialog);
 
 }
 
@@ -79,13 +79,13 @@ void WidgetRegister::registerKey()
     QString strSeriesNumber = m_pEdtKey->text();
     if(!Global::decodeSeriesNumber(strSeriesNumber))
     {
-        QMessageBox::about( this, Global::s_strExeName,"invalid key!");
+        QMessageBox::about(this, Global::s_strExeName, "invalid key!");
         return;
     }
 
     QSettings settings("option.ini", QSettings::IniFormat); // 当前目录的INI文件
     settings.beginGroup("Option");
-    settings.setValue("SeriesNumber", strSeriesNumber );
+    settings.setValue("SeriesNumber", strSeriesNumber);
     settings.endGroup();
 
     //备份的路径
@@ -93,15 +93,16 @@ void WidgetRegister::registerKey()
         QString strPath = QString("%1\\dllescort\\option.ini").arg(Global::s_strProgramDataPath);
         if(!Tool::isFileOrDirExist(strPath))
         {
-            Tool::createDirectory(strPath,true);
+            Tool::createDirectory(strPath, true);
         }
 
         QSettings settings(strPath, QSettings::IniFormat); // 当前目录的INI文件
         settings.beginGroup("Option");
-        settings.setValue("SeriesNumber", strSeriesNumber );
+        settings.setValue("SeriesNumber", strSeriesNumber);
         settings.endGroup();
     }
 
-    QMessageBox::about( this, Global::s_strExeName,"Thank you! Your product registration was successful! Click OK to continue.");
+    QMessageBox::about(this, Global::s_strExeName,
+                       "Thank you! Your product registration was successful! Click OK to continue.");
     closeDialog();
 }

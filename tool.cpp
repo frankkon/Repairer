@@ -11,68 +11,69 @@ Tool::Tool()
 {
 }
 
-void Tool::deleteFile( QString strFile )
+void Tool::deleteFile(QString strFile)
 {
     QFile::remove(strFile);
 }
 
 
 
-QString Tool::getFileName( QString strFullPath )
+QString Tool::getFileName(QString strFullPath)
 {
     strFullPath = strFullPath.replace("/", "\\");
-    int nIndex = strFullPath.lastIndexOf( '\\', -1 );
+    int nIndex = strFullPath.lastIndexOf('\\', -1);
 
-    if( -1 == nIndex )
+    if(-1 == nIndex)
     {
         return "";
     }
 
     //QString strTmp = strFullName.right( strFullName.count() - nIndex - 1 );
-    return strFullPath.right( strFullPath.count() - nIndex - 1 );
+    return strFullPath.right(strFullPath.count() - nIndex - 1);
 }
 
-QString Tool::getFileNameWithoutSuffix( QString strFile )
+QString Tool::getFileNameWithoutSuffix(QString strFile)
 {
     strFile = strFile.replace("/", "\\");
 
-    int nIndex1 = strFile.lastIndexOf( '\\', -1 );
-    int nIndex2 = strFile.lastIndexOf( '.', -1 );
+    int nIndex1 = strFile.lastIndexOf('\\', -1);
+    int nIndex2 = strFile.lastIndexOf('.', -1);
 
-    if( -1 == nIndex1 )
+    if(-1 == nIndex1)
     {
         nIndex1 = 0;
     }
-    if( -1 == nIndex2 )
+    if(-1 == nIndex2)
     {
         nIndex2 = strFile.size();
     }
 
-    return strFile.mid(nIndex1,nIndex2-nIndex1);
+    return strFile.mid(nIndex1, nIndex2 - nIndex1);
 }
 
-QString Tool::getFileSuffix( QString strName )
+QString Tool::getFileSuffix(QString strName)
 {
-    int nIndex = strName.lastIndexOf( '.', -1 );
-    return strName.right( strName.count() - nIndex - 1 );
+    int nIndex = strName.lastIndexOf('.', -1);
+    return strName.right(strName.count() - nIndex - 1);
 }
 
-void Tool::openAndSelectFile( QString strFile )
+void Tool::openAndSelectFile(QString strFile)
 {
-    QString strCmd = QString("/select,%1").arg(strFile);   // = " /select,D:\\cn_win_srv_2003_r2_enterprise_with_sp2_vl_cd2.iso";
-//    QMessageBox::about( NULL, "A", strCmd );
-//    QByteArray ba = strCmd.toLatin1();
-//    const char *cstr = ba.data();
-//    ::ShellExecuteA( 0, "open", "explorer.exe", cstr, NULL, true );
+    QString strCmd = QString("/select,%1").arg(
+                         strFile);   // = " /select,D:\\cn_win_srv_2003_r2_enterprise_with_sp2_vl_cd2.iso";
+    //    QMessageBox::about( NULL, "A", strCmd );
+    //    QByteArray ba = strCmd.toLatin1();
+    //    const char *cstr = ba.data();
+    //    ::ShellExecuteA( 0, "open", "explorer.exe", cstr, NULL, true );
 
     wchar_t wStr[1024];
     int nLen = strCmd.toWCharArray(wStr);
     wStr[nLen] = 0;
 
-    ::ShellExecuteW( 0, L"open", L"explorer.exe", wStr, NULL, true );
+    ::ShellExecuteW(0, L"open", L"explorer.exe", wStr, NULL, true);
 }
 
-void Tool::createSubDirectory( QString strPath )
+void Tool::createSubDirectory(QString strPath)
 {
     QDir dir;
     bool bExist = dir.exists(strPath);
@@ -82,12 +83,12 @@ void Tool::createSubDirectory( QString strPath )
         if(!bOK)
         {
             QString strMsg = QString("create directory %1 failed").arg(strPath);
-            QMessageBox::warning( NULL, "Repairer", strMsg );
+            QMessageBox::warning(NULL, "Repairer", strMsg);
         }
     }
 }
 
-void Tool::createDirectory( QString strPath, bool bFile )
+void Tool::createDirectory(QString strPath, bool bFile)
 {
     QString strDir;
 
@@ -96,8 +97,8 @@ void Tool::createDirectory( QString strPath, bool bFile )
     do
     {
         bool bBreak = false;
-        nIndex = strPath.indexOf( '\\', nFrom );
-        if( -1 == nIndex )
+        nIndex = strPath.indexOf('\\', nFrom);
+        if(-1 == nIndex)
         {
             if(bFile)
             {
@@ -117,22 +118,23 @@ void Tool::createDirectory( QString strPath, bool bFile )
         else
         {
             nFrom = nIndex + 1;
-            strDir = strPath.left( nIndex + 1 );
+            strDir = strPath.left(nIndex + 1);
             createSubDirectory(strDir);
         }
 
-    }while(true);
+    }
+    while(true);
 }
 
 
-void Tool::uncompressFile( QString strCompressedFile, QString strSavePath, QString str7zPath )
+void Tool::uncompressFile(QString strCompressedFile, QString strSavePath, QString str7zPath)
 {
-    qDebug()<<"uncompressFile begin";
+    qDebug() << "uncompressFile begin";
     QString strCmd = QString("x \"%1\" -o\"%2\" -y").arg(strCompressedFile).arg(strSavePath);  //-o后面不能有空格
 
-//    QByteArray ba = strCmd.toLatin1();
-//    const char *cstr = ba.data();
-//    ::ShellExecuteA( 0, "open", "7z.exe", cstr, NULL, SW_HIDE );
+    //    QByteArray ba = strCmd.toLatin1();
+    //    const char *cstr = ba.data();
+    //    ::ShellExecuteA( 0, "open", "7z.exe", cstr, NULL, SW_HIDE );
 
     wchar_t wStr[1024];
     int nLen = strCmd.toWCharArray(wStr);
@@ -142,27 +144,27 @@ void Tool::uncompressFile( QString strCompressedFile, QString strSavePath, QStri
     int nLen7z = str7zPath.toWCharArray(wStr7z);
     wStr7z[nLen7z] = 0;
 
-    ::ShellExecute( 0, L"open", wStr7z, wStr, NULL, SW_HIDE );
+    ::ShellExecute(0, L"open", wStr7z, wStr, NULL, SW_HIDE);
 
     //等待解压缩完成
     Sleep(5000);
 
-    qDebug()<<"uncompressFile end";
+    qDebug() << "uncompressFile end";
 }
 
-typedef void (WINAPI *PGNSI)(LPSYSTEM_INFO);
-typedef BOOL (WINAPI *PGPI)(DWORD, DWORD, DWORD, DWORD, PDWORD);
+typedef void (WINAPI* PGNSI)(LPSYSTEM_INFO);
+typedef BOOL (WINAPI* PGPI)(DWORD, DWORD, DWORD, DWORD, PDWORD);
 
 QString Tool::getSystemInfo()
 {
     QString strBit;
     SYSTEM_INFO info;
     ::GetSystemInfo(&info);
-    if( info.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64 )
+    if(info.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64)
     {
         strBit = "64-bit";
     }
-    else if( info.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_INTEL )
+    else if(info.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_INTEL)
     {
         strBit = "32-bit";
     }
@@ -181,25 +183,25 @@ QString Tool::getSystemInfo()
 
     switch(osInfo.dwMajorVersion)
     {
-    case 5:
+        case 5:
         {
             switch(osInfo.dwMinorVersion)
             {
-            case 0:
+                case 0:
                 {
                     //Windows 2000
                     strOs = "Windows 2000";
                 }
                 break;
-            case 1:
+                case 1:
                 {
                     //Windows XP
                     strOs = "Windows XP";
-                    if( osInfo.wSuiteMask == VER_SUITE_EMBEDDEDNT )   //Embedded 按照 Home Edition
+                    if(osInfo.wSuiteMask == VER_SUITE_EMBEDDEDNT)     //Embedded 按照 Home Edition
                     {
                         strOs += "Home Edition";
                     }
-                    else if( osInfo.wSuiteMask == VER_SUITE_PERSONAL )
+                    else if(osInfo.wSuiteMask == VER_SUITE_PERSONAL)
                     {
                         strOs += "Home Edition";
                     }
@@ -209,9 +211,9 @@ QString Tool::getSystemInfo()
                     }
                 }
                 break;
-            case 2:
+                case 2:
                 {
-                    if( VER_NT_WORKSTATION == osInfo.wProductType && PROCESSOR_ARCHITECTURE_AMD64 == info.wProcessorArchitecture )
+                    if(VER_NT_WORKSTATION == osInfo.wProductType && PROCESSOR_ARCHITECTURE_AMD64 == info.wProcessorArchitecture)
                     {
                         strOs = "Windows XP Professional x64 Edition";
                     }
@@ -221,7 +223,7 @@ QString Tool::getSystemInfo()
                     }
                 }
                 break;
-            default:
+                default:
                 {
                     strOs = "other os";
                 }
@@ -229,13 +231,13 @@ QString Tool::getSystemInfo()
             }
         }
         break;
-    case 6:
+        case 6:
         {
             switch(osInfo.dwMinorVersion)
             {
-            case 0:
+                case 0:
                 {
-                    if( VER_NT_WORKSTATION == osInfo.wProductType )
+                    if(VER_NT_WORKSTATION == osInfo.wProductType)
                     {
                         //Windows Vista
                         strOs = "Windows Vista";
@@ -247,9 +249,9 @@ QString Tool::getSystemInfo()
                     }
                 }
                 break;
-            case 1:
+                case 1:
                 {
-                    if( VER_NT_WORKSTATION == osInfo.wProductType )
+                    if(VER_NT_WORKSTATION == osInfo.wProductType)
                     {
                         //Windows 7
                         strOs = "Windows 7";
@@ -260,68 +262,68 @@ QString Tool::getSystemInfo()
                         strOs = "Windows Server 2008 R2";
                     }
                 }
-            break;
-            case 2:
+                break;
+                case 2:
                 {
                     //Windows 8
                     strOs = "Windows 8";
 
-                    pGPI = (PGPI)GetProcAddress( GetModuleHandle(L"kernel32.dll"), "GetProductInfo" );
-                    pGPI( osInfo.dwMajorVersion, osInfo.dwMinorVersion, 0, 0, &dwType );
+                    pGPI = (PGPI)GetProcAddress(GetModuleHandle(L"kernel32.dll"), "GetProductInfo");
+                    pGPI(osInfo.dwMajorVersion, osInfo.dwMinorVersion, 0, 0, &dwType);
 
-                    if( PRODUCT_PROFESSIONAL == dwType )
+                    if(PRODUCT_PROFESSIONAL == dwType)
                     {
                         strOs += " Pro";
                     }
-                    else if( PRODUCT_ENTERPRISE == dwType )
+                    else if(PRODUCT_ENTERPRISE == dwType)
                     {
                         strOs += " Enterprise";
                     }
                 }
                 break;
-            default:
+                default:
                 {
                 }
             }
         }
         break;
-    case 7:
+        case 7:
         {
 
         }
         break;
-    default:
-        break;
+        default:
+            break;
     }
 
 
-    qDebug()<<"numbers of CPUs:"<<info.dwNumberOfProcessors;
-    qDebug()<<"CPU type:"<<info.dwProcessorType<<info.wProcessorRevision;
+    qDebug() << "numbers of CPUs:" << info.dwNumberOfProcessors;
+    qDebug() << "CPU type:" << info.dwProcessorType << info.wProcessorRevision;
 
     QString str;
     return str;
 }
 
-QString Tool::getFileVersion( QString strFile )
+QString Tool::getFileVersion(QString strFile)
 {
     //open开始
     QByteArray ba = strFile.toLatin1();
-    const char *cstr = ba.data();
+    const char* cstr = ba.data();
 
     //Get the version information size for allocate the buffer
     DWORD dwHandle;
     DWORD dwDataSize = ::GetFileVersionInfoSizeA((LPCSTR)cstr, &dwHandle);
     //DWORD dwDataSize = ::GetFileVersionInfoSizeA( "C:\\a", &dwHandle );
-    if( 0 == dwDataSize )
+    if(0 == dwDataSize)
     {
         DWORD dwError = ::GetLastError();
-        qDebug()<<dwError;
+        qDebug() << dwError;
         return "";
     }
 
     //Allocate buffer and retrieve version information
     BYTE* pVersionData = new BYTE[dwDataSize];
-    if (!::GetFileVersionInfoA((LPCSTR)cstr, dwHandle, dwDataSize, (void**)pVersionData) )
+    if(!::GetFileVersionInfoA((LPCSTR)cstr, dwHandle, dwDataSize, (void**)pVersionData))
     {
         delete[] pVersionData;
         pVersionData = NULL;
@@ -331,7 +333,7 @@ QString Tool::getFileVersion( QString strFile )
     //Retrieve the first language and character-set identifier
     UINT nQuerySize;
     DWORD* pTransTable;
-    if (!::VerQueryValue(pVersionData, L"\\VarFileInfo\\Translation", (void **)&pTransTable, &nQuerySize) )
+    if(!::VerQueryValue(pVersionData, L"\\VarFileInfo\\Translation", (void**)&pTransTable, &nQuerySize))
     {
         delete[] pVersionData;
         pVersionData = NULL;
@@ -341,13 +343,14 @@ QString Tool::getFileVersion( QString strFile )
 
     nQuerySize = 0;
     VS_FIXEDFILEINFO* pVsffi;
-    if ( ::VerQueryValueA((void **)pVersionData, "\\", (void**)&pVsffi, &nQuerySize) )
+    if(::VerQueryValueA((void**)pVersionData, "\\", (void**)&pVsffi, &nQuerySize))
     {
 
     }
 
 
-    QString strVersion = QString("%1.%2.%3.%4").arg(HIWORD(pVsffi->dwFileVersionMS)).arg(LOWORD(pVsffi->dwFileVersionMS)).arg(HIWORD(pVsffi->dwFileVersionLS)).arg(LOWORD(pVsffi->dwFileVersionLS));
+    QString strVersion = QString("%1.%2.%3.%4").arg(HIWORD(pVsffi->dwFileVersionMS)).arg(LOWORD(
+                             pVsffi->dwFileVersionMS)).arg(HIWORD(pVsffi->dwFileVersionLS)).arg(LOWORD(pVsffi->dwFileVersionLS));
 
     return strVersion;
 
@@ -355,24 +358,24 @@ QString Tool::getFileVersion( QString strFile )
 
 
     //Swap the words to have lang-charset in the correct format
-//    DWORD dwLangCharset = MAKELONG(HIWORD(pTransTable[0]), LOWORD(pTransTable[0]));
-//    //QString strV = Tool::queryValue( "FileVersion", dwLangCharset, pVersionData );  //ProductVersion
-//    QString strV = Tool::queryValue( "ProductVersion", dwLangCharset, pVersionData );  //ProductVersion
+    //    DWORD dwLangCharset = MAKELONG(HIWORD(pTransTable[0]), LOWORD(pTransTable[0]));
+    //    //QString strV = Tool::queryValue( "FileVersion", dwLangCharset, pVersionData );  //ProductVersion
+    //    QString strV = Tool::queryValue( "ProductVersion", dwLangCharset, pVersionData );  //ProductVersion
 
-//    //此时可能出现 v_6.1.7600.16385 (win7_rtm.090713-1255)
-//    int nIndex = strV.indexOf(' ');
-//    if( nIndex != -1 )
-//    {
-//        strV = strV.left(nIndex);
-//    }
+    //    //此时可能出现 v_6.1.7600.16385 (win7_rtm.090713-1255)
+    //    int nIndex = strV.indexOf(' ');
+    //    if( nIndex != -1 )
+    //    {
+    //        strV = strV.left(nIndex);
+    //    }
 
-//    return strV;
+    //    return strV;
 }
 
-QString Tool::queryValue( QString strValueName, DWORD dwLangCharset, BYTE* pVersionData )
+QString Tool::queryValue(QString strValueName, DWORD dwLangCharset, BYTE* pVersionData)
 {
-    if ( pVersionData == NULL )
-        return "";
+    if(pVersionData == NULL)
+    { return ""; }
 
     //Query version information value
     UINT nQuerySize;
@@ -380,12 +383,12 @@ QString Tool::queryValue( QString strValueName, DWORD dwLangCharset, BYTE* pVers
 
     QString strTmp;
     //QString strTmp = QString("%08lx");
-    strTmp.sprintf( "%08lx", dwLangCharset );
+    strTmp.sprintf("%08lx", dwLangCharset);
     QString strBlockName = QString("\\StringFileInfo\\%1\\%2").arg(strTmp).arg(strValueName);
     QByteArray ba = strBlockName.toLatin1();
-    const char *cstr = ba.data();
+    const char* cstr = ba.data();
 
-    if ( ::VerQueryValueA((void **)pVersionData, cstr, &lpData, &nQuerySize) )
+    if(::VerQueryValueA((void**)pVersionData, cstr, &lpData, &nQuerySize))
     {
 
     }
@@ -395,17 +398,17 @@ QString Tool::queryValue( QString strValueName, DWORD dwLangCharset, BYTE* pVers
     return strValue;
 }
 
-bool Tool::isFileTypeX86( QString strFile )
+bool Tool::isFileTypeX86(QString strFile)
 {
     wchar_t wStr[1024];
     int nLen = strFile.toWCharArray(wStr);
     wStr[nLen] = 0;
 
     IMAGE_DOS_HEADER idh;
-//    FILE *f = fopen(lpFileName, "rb");
+    //    FILE *f = fopen(lpFileName, "rb");
     FILE* f = _wfopen(wStr, TEXT("rb"));
-//    FILE *f = NULL;
-//    _wfopen_s(&f, wStr, TEXT("rb"));
+    //    FILE *f = NULL;
+    //    _wfopen_s(&f, wStr, TEXT("rb"));
     fread(&idh, sizeof(idh), 1, f);
 
     IMAGE_FILE_HEADER ifh;
@@ -424,23 +427,23 @@ bool Tool::isFileTypeX86( QString strFile )
     }
 }
 
-int Tool::getFileSize( QString strFile )
+int Tool::getFileSize(QString strFile)
 {
     QFile file(strFile);
-    if (!file.open(QIODevice::ReadOnly))
-        return 0;
+    if(!file.open(QIODevice::ReadOnly))
+    { return 0; }
 
-    int nSize = file.size()/1024;
+    int nSize = file.size() / 1024;
     file.close();
 
     return nSize;
 }
 
-qint64 Tool::getFileSizeByte( QString strFile )
+qint64 Tool::getFileSizeByte(QString strFile)
 {
     QFile file(strFile);
-    if (!file.open(QIODevice::ReadOnly))
-        return 0;
+    if(!file.open(QIODevice::ReadOnly))
+    { return 0; }
 
     qint64 nSize = file.size();
     file.close();
@@ -450,33 +453,34 @@ qint64 Tool::getFileSizeByte( QString strFile )
 
 void Tool::removeFilesinDir(const QString path)
 {
-  QDir dir(path);
-  QFileInfoList info_list = dir.entryInfoList(QDir::Files | QDir::Hidden | QDir::NoDotAndDotDot | QDir::NoSymLinks | QDir::AllDirs);
-  foreach(QFileInfo file_info, info_list)
-  {
-    if (file_info.isDir())
+    QDir dir(path);
+    QFileInfoList info_list = dir.entryInfoList(QDir::Files | QDir::Hidden | QDir::NoDotAndDotDot | QDir::NoSymLinks |
+                              QDir::AllDirs);
+    foreach(QFileInfo file_info, info_list)
     {
-      Tool::removeFilesinDir(file_info.absoluteFilePath());
+        if(file_info.isDir())
+        {
+            Tool::removeFilesinDir(file_info.absoluteFilePath());
+        }
+        else if(file_info.isFile())
+        {
+            QFile file(file_info.absoluteFilePath());
+            file.setPermissions(QFile::WriteOwner);
+            qDebug() << "remove file  : " << file_info.absoluteFilePath();
+            file.remove();
+        }
     }
-    else if (file_info.isFile())
-    {
-        QFile file(file_info.absoluteFilePath());
-        file.setPermissions(QFile::WriteOwner);
-        qDebug() << "remove file  : " << file_info.absoluteFilePath();
-        file.remove();
-    }
-  }
-  QDir temp_dir;
-  temp_dir.rmdir(path) ;
-  qDebug() << "remove empty dir : " << path;
+    QDir temp_dir;
+    temp_dir.rmdir(path) ;
+    qDebug() << "remove empty dir : " << path;
 }
 
-void Tool::reomveDir( QString strPath )
+void Tool::reomveDir(QString strPath)
 {
-//    QDir dir(strPath);
-//    dir.setFilter(QDir::Files);
-//    for( int i=0; i <= dir.count()-1; i++ )
-//        dir.remove(dir[i]);
+    //    QDir dir(strPath);
+    //    dir.setFilter(QDir::Files);
+    //    for( int i=0; i <= dir.count()-1; i++ )
+    //        dir.remove(dir[i]);
 
     if(!isFileOrDirExist(strPath))
     {
@@ -488,16 +492,17 @@ void Tool::reomveDir( QString strPath )
     QFileInfoList::iterator it;
     QVector<QString> dirNames;
 
-    dirNames<<strPath;
+    dirNames << strPath;
 
-    for( int i=0; i<dirNames.size(); ++i )
+    for(int i = 0; i < dirNames.size(); ++i)
     {
         dir.setPath(dirNames[i]);
-        list = dir.entryInfoList(QDir::Dirs | QDir::Files | QDir::Readable | QDir::Writable | QDir::Hidden|QDir::NoDotAndDotDot, QDir::Name);
-        if(list.size()>0)
+        list = dir.entryInfoList(QDir::Dirs | QDir::Files | QDir::Readable | QDir::Writable | QDir::Hidden |
+                                 QDir::NoDotAndDotDot, QDir::Name);
+        if(list.size() > 0)
         {
             it = list.begin();
-            while(it!=list.end())
+            while(it != list.end())
             {
                 if(it->isDir())
                 {
@@ -512,7 +517,7 @@ void Tool::reomveDir( QString strPath )
                     if(!dir.remove(it->fileName()))
                     {
                         QString str = QString("remove file %1 failed!").arg(it->fileName());
-                        qDebug()<<str;
+                        qDebug() << str;
                     }
                 }
 
@@ -521,7 +526,7 @@ void Tool::reomveDir( QString strPath )
         }
     }
 
-    for( int i=dirNames.size()-1; i>=0; --i )
+    for(int i = dirNames.size() - 1; i >= 0; --i)
     {
         dir.setPath(dirNames[i]);
         if(!dir.rmdir("."))
@@ -529,18 +534,18 @@ void Tool::reomveDir( QString strPath )
             QString str = QString("remove dir %1 failed!").arg(dirNames[i]);
             //QMessageBox::about( NULL, "warning", str );
 
-            qDebug()<<str;
+            qDebug() << str;
         }
     }
 }
 
 #include "global.h"
-bool Tool::isFileOrDirExist( QString strFile )
+bool Tool::isFileOrDirExist(QString strFile)
 {
-    if( strFile.indexOf( "\\system32\\", 0, Qt::CaseInsensitive) != -1 && Global::s_bX64 )
+    if(strFile.indexOf("\\system32\\", 0, Qt::CaseInsensitive) != -1 && Global::s_bX64)
     {
-        PWOW64 pDisable = (PWOW64)GetProcAddress( GetModuleHandle(L"kernel32.dll"), "Wow64DisableWow64FsRedirection" );
-        PWOW64 pRevert = (PWOW64)GetProcAddress( GetModuleHandle(L"kernel32.dll"), "Wow64RevertWow64FsRedirection" );
+        PWOW64 pDisable = (PWOW64)GetProcAddress(GetModuleHandle(L"kernel32.dll"), "Wow64DisableWow64FsRedirection");
+        PWOW64 pRevert = (PWOW64)GetProcAddress(GetModuleHandle(L"kernel32.dll"), "Wow64RevertWow64FsRedirection");
         PVOID OldValue = NULL;
         //Wow64DisableWow64FsRedirection(&OldValue);
         pDisable(&OldValue);

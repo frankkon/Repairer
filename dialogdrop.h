@@ -9,17 +9,17 @@ class DialogDrop : public QDialog
 {
     Q_OBJECT
 public:
-    explicit DialogDrop(QWidget *parent = 0);
+    explicit DialogDrop(QWidget* parent = 0);
 
-    void keyPressEvent(QKeyEvent *event);
+    void keyPressEvent(QKeyEvent* event);
     //void reject();
 
 protected:
 
-    void mousePressEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    virtual void paintEvent(QPaintEvent *event);
+    void mousePressEvent(QMouseEvent* event);
+    void mouseReleaseEvent(QMouseEvent* event);
+    void mouseMoveEvent(QMouseEvent* event);
+    virtual void paintEvent(QPaintEvent* event);
 
 signals:
 

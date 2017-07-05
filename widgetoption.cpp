@@ -3,7 +3,7 @@
 #include "global.h"
 #include <QSettings>
 
-WidgetOption::WidgetOption(QWidget *parent) :
+WidgetOption::WidgetOption(QWidget* parent) :
     QWidget(parent),
     ui(new Ui::WidgetOption)
 {
@@ -20,7 +20,7 @@ WidgetOption::WidgetOption(QWidget *parent) :
     {
         ui->checkBox_startup->setChecked(false);
     }
-    connect( ui->pushButton_apply, &QPushButton::clicked, this, &WidgetOption::apply );
+    connect(ui->pushButton_apply, &QPushButton::clicked, this, &WidgetOption::apply);
 
 }
 
@@ -32,7 +32,7 @@ WidgetOption::~WidgetOption()
 void WidgetOption::apply()
 {
 
-    if( ui->checkBox_startup->isChecked() )
+    if(ui->checkBox_startup->isChecked())
     {
         QString path = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run";
         QSettings reg(path, QSettings::NativeFormat);

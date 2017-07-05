@@ -7,7 +7,7 @@
 #include <QTreeWidgetItem>
 #include "global.h"
 
-WidgetDiskClean::WidgetDiskClean(QWidget *parent) :
+WidgetDiskClean::WidgetDiskClean(QWidget* parent) :
     QWidget(parent),
     ui(new Ui::WidgetDiskClean)
 {
@@ -15,7 +15,7 @@ WidgetDiskClean::WidgetDiskClean(QWidget *parent) :
 
     ui->treeWidget->setColumnCount(3);
     QStringList headers;
-    headers<<"suffix"<<"name"<<"size"<<"path";
+    headers << "suffix" << "name" << "size" << "path";
     ui->treeWidget->setHeaderLabels(headers);
     ui->treeWidget->setColumnWidth(0, 70);
     ui->treeWidget->setColumnWidth(1, 220);
@@ -28,8 +28,9 @@ WidgetDiskClean::WidgetDiskClean(QWidget *parent) :
     m_pObjDiskClean->moveToThread(m_pThread);
     m_pThread->start();
 
-    connect( ui->pushButton_disk_clean, &QPushButton::clicked, m_pObjDiskClean, &ObjDiskClean::clean);
-    connect(m_pObjDiskClean, &ObjDiskClean::sigUpdateCurrentCheckFile, this, &WidgetDiskClean::updateCurrentCheckFile, Qt::QueuedConnection);
+    connect(ui->pushButton_disk_clean, &QPushButton::clicked, m_pObjDiskClean, &ObjDiskClean::clean);
+    connect(m_pObjDiskClean, &ObjDiskClean::sigUpdateCurrentCheckFile, this, &WidgetDiskClean::updateCurrentCheckFile,
+            Qt::QueuedConnection);
     connect(m_pObjDiskClean, &ObjDiskClean::sigCleanFinish, this, &WidgetDiskClean::cleanFinish, Qt::QueuedConnection);
     connect(this, &WidgetDiskClean::sigClean, m_pObjDiskClean, &ObjDiskClean::clean, Qt::BlockingQueuedConnection);
 }
@@ -56,11 +57,11 @@ void WidgetDiskClean::updateCurrentCheckFile(bool bClean, QString strFilePath, C
     {
         //添加新的父节点
         QStringList title;
-        title<<pItem->m_strName;
+        title << pItem->m_strName;
         pTreeItem = new QTreeWidgetItem(ui->treeWidget, title);
         QStringList list;
-        list << ""<<""<<"";
-        QTreeWidgetItem *leaf = new QTreeWidgetItem(pTreeItem, list);
+        list << "" << "" << "";
+        QTreeWidgetItem* leaf = new QTreeWidgetItem(pTreeItem, list);
         pTreeItem->addChild(leaf);
     }
     else if(1 == lst.size())
@@ -68,8 +69,8 @@ void WidgetDiskClean::updateCurrentCheckFile(bool bClean, QString strFilePath, C
         //添加到父节点下
         pTreeItem = lst.at(0);
         QStringList list1;
-        list1 << ""<<pItem->m_strName<<QString::number(pItem->m_nTotalSizeKb)<<pItem->m_strFilePath;
-        QTreeWidgetItem *leaf1 = new QTreeWidgetItem(pTreeItem, list1);
+        list1 << "" << pItem->m_strName << QString::number(pItem->m_nTotalSizeKb) << pItem->m_strFilePath;
+        QTreeWidgetItem* leaf1 = new QTreeWidgetItem(pTreeItem, list1);
         pTreeItem->addChild(leaf1);
 
     }
@@ -83,7 +84,7 @@ void WidgetDiskClean::updateCurrentCheckFile(bool bClean, QString strFilePath, C
 
 void WidgetDiskClean::cleanFinish()
 {
-    qDebug()<<"WidgetDiskClean::cleanFinish";
+    qDebug() << "WidgetDiskClean::cleanFinish";
 
 
 }

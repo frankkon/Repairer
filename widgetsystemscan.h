@@ -10,15 +10,16 @@
 
 #include "objsystemscan.h"
 
-namespace Ui {
-class WidgetSystemScan;
+namespace Ui
+{
+    class WidgetSystemScan;
 }
 
 class WidgetSystemScan : public QWidget
 {
     Q_OBJECT
 public:
-    explicit WidgetSystemScan(QWidget *parent = 0);
+    explicit WidgetSystemScan(QWidget* parent = 0);
     ~WidgetSystemScan();
 
     void translate();
@@ -32,20 +33,20 @@ private:
     void clearLostFile();
 
 protected:
-    void paintEvent(QPaintEvent * event);
+    void paintEvent(QPaintEvent* event);
 
 signals:
-    void sigDownloadFile( int nIndex );
+    void sigDownloadFile(int nIndex);
     void sigStartCheckDlls();
 
 public slots:
-    void updateCurrentCheckFile( QString strFile, int nTotal, int nCurrent );
-    void updateCurrentDownloadFile( FileListItem* pItem, int nPercentage );
-    void downloadFinished( FileListItem* pItem, bool bSuccess );
-    void addFileToTable( FileListItem* pItem );
+    void updateCurrentCheckFile(QString strFile, int nTotal, int nCurrent);
+    void updateCurrentDownloadFile(FileListItem* pItem, int nPercentage);
+    void downloadFinished(FileListItem* pItem, bool bSuccess);
+    void addFileToTable(FileListItem* pItem);
     void deleteFileFromTable();
 
-    void setCheckBox( int nState );
+    void setCheckBox(int nState);
     void downloadFile();
 
 
@@ -55,21 +56,21 @@ public slots:
 
 
 private:
-    Ui::WidgetSystemScan *ui;
+    Ui::WidgetSystemScan* ui;
     ObjSystemScan* m_pObjSysScan;
 
     QThread* m_pThread;
 
-//    QLabel*         m_pLabIco;
-//    QLabel*         m_pLabTitlePro;
-//    QLabel*         m_pLabTitleLst;
-//    QLabel*         m_pLabWatch;
-//    QPushButton*    m_pBtnScan;
-//    QProgressBar*   m_pProBar;
-//    QTableWidget*   m_pTableWidget;
-//    QPushButton*    m_pBtnSelAll;
-//    QPushButton*    m_pBtnSelNone;
-//    QPushButton*    m_pBtnDownloadAll;
+    //    QLabel*         m_pLabIco;
+    //    QLabel*         m_pLabTitlePro;
+    //    QLabel*         m_pLabTitleLst;
+    //    QLabel*         m_pLabWatch;
+    //    QPushButton*    m_pBtnScan;
+    //    QProgressBar*   m_pProBar;
+    //    QTableWidget*   m_pTableWidget;
+    //    QPushButton*    m_pBtnSelAll;
+    //    QPushButton*    m_pBtnSelNone;
+    //    QPushButton*    m_pBtnDownloadAll;
 
 };
 

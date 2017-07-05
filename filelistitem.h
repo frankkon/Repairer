@@ -18,23 +18,23 @@ class FileListItem : public QObject
 {
     Q_OBJECT
 public:
-    explicit FileListItem(QObject *parent = 0);
+    explicit FileListItem(QObject* parent = 0);
     ~FileListItem();
 
     void openFile();
     void cancelDownload();
 
-    void setThread( QThread* pThread );
-    void setDownloadButton( QPushButton* pBtn );
-    void setDeleteButton( QPushButton* pBtn );
+    void setThread(QThread* pThread);
+    void setDownloadButton(QPushButton* pBtn);
+    void setDeleteButton(QPushButton* pBtn);
 
 signals:
-    void sigCurrentDownloadFile( FileListItem* pItem, int nPercentage );
-    void sigDownloadFinished( FileListItem* pItem, bool bSuccess );
+    void sigCurrentDownloadFile(FileListItem* pItem, int nPercentage);
+    void sigDownloadFinished(FileListItem* pItem, bool bSuccess);
 
 public slots:
-    void CurrentDownloadFile( int nPercentage );
-    void downloadFinished( QString strFile, bool bSuccess );
+    void CurrentDownloadFile(int nPercentage);
+    void downloadFinished(QString strFile, bool bSuccess);
 
     void downloadFile();
 

@@ -1,7 +1,7 @@
 #include "cleanitem.h"
 
 
-CleanItem::CleanItem(QObject *parent) :
+CleanItem::CleanItem(QObject* parent) :
     QObject(parent)
 {
     m_pCheckBox = NULL;

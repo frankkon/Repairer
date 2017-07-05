@@ -39,12 +39,12 @@ void test()
         Global::s_strCurrentPath = QDir::currentPath();
     }
 
-    qDebug()<<"main thread:"<<QThread::currentThreadId();
+    qDebug() << "main thread:" << QThread::currentThreadId();
 
     //a.setWindowIcon(QIcon(":/main/inno"));
 
     //初始化
-     Global::initGlobalData();
+    Global::initGlobalData();
 
     w.init();
 
@@ -52,9 +52,9 @@ void test()
 
     {
         QString str = "C:/Documents and Settings/Administrator/Cookies/administrator@114la[1].txt";
-        qDebug()<<str;
+        qDebug() << str;
         str.replace("/", "\\");
-        qDebug()<<str;
+        qDebug() << str;
     }
 }
 
@@ -86,12 +86,12 @@ void test2()
         Global::s_strCurrentPath = QDir::currentPath();
     }
 
-    qDebug()<<"main thread:"<<QThread::currentThreadId();
+    qDebug() << "main thread:" << QThread::currentThreadId();
 
     //a.setWindowIcon(QIcon(":/main/inno"));
 
     //初始化
-     Global::initGlobalData();
+    Global::initGlobalData();
 
     w.init();
 
@@ -99,15 +99,15 @@ void test2()
 
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     //QString strVersion = Tool::getFileVersion("c:\\kernel32.dll");
     //int nf = strVersion.indexOf(".");
     //int vv = strVersion.left(nf).toInt();
 
-//    qint64 qi = -2;
-//    QString strText = "Error downloading http://61.147.103.19:8089/xpsp3_x86/AppPatch/test.dll - server replied: Not Found";
-//    int nff = strText.indexOf("tserver replied: Not Found");
+    //    qint64 qi = -2;
+    //    QString strText = "Error downloading http://61.147.103.19:8089/xpsp3_x86/AppPatch/test.dll - server replied: Not Found";
+    //    int nff = strText.indexOf("tserver replied: Not Found");
 
     //测试搜索磁盘
     /*
@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
     }
     */
 
-     QApplication a(argc, argv);
+    QApplication a(argc, argv);
 
     //限制只能启动一个进程
     QSharedMemory shared_memory;
@@ -154,12 +154,12 @@ int main(int argc, char *argv[])
         Global::s_strCurrentPath = QDir::currentPath();
     }
 
-    qDebug()<<"main thread:"<<QThread::currentThreadId();
+    qDebug() << "main thread:" << QThread::currentThreadId();
 
     a.setWindowIcon(QIcon(":/main/inno"));
 
     //初始化
-     Global::initGlobalData();
+    Global::initGlobalData();
 
     w.init();
 

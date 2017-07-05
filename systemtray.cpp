@@ -1,6 +1,6 @@
 #include "systemtray.h"
 
-SystemTray::SystemTray(QObject *parent) :
+SystemTray::SystemTray(QObject* parent) :
     QSystemTrayIcon(parent)
 {
     createAction();
@@ -20,8 +20,8 @@ void SystemTray::createAction()
     setContextMenu(m_pMenu);
     m_pMenu->setFixedWidth(100);
 
-    connect( m_pActOpen, SIGNAL(triggered()), this, SIGNAL(showWidget()));
-    connect (m_pActLayout, SIGNAL(triggered()), parent(), SLOT(close()));
+    connect(m_pActOpen, SIGNAL(triggered()), this, SIGNAL(showWidget()));
+    connect(m_pActLayout, SIGNAL(triggered()), parent(), SLOT(close()));
 }
 
 void SystemTray::addActions()

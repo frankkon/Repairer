@@ -9,7 +9,7 @@ class DlgRegisterKey : public DialogDrop
 {
     Q_OBJECT
 public:
-    explicit DlgRegisterKey(QWidget *parent = 0);
+    explicit DlgRegisterKey(QWidget* parent = 0);
 
 signals:
 

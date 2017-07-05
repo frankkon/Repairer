@@ -9,11 +9,11 @@ class DesMgr
 public:
     DesMgr();
 
-    QString decrypt( QString strCode );
+    QString decrypt(QString strCode);
 
 private:
-    void ConvertCiphertext2OtherFormat(int iBitsLen, char *szCipherInBytes);
-    int ConvertOtherFormat2Ciphertext(char *szCipher);
+    void ConvertCiphertext2OtherFormat(int iBitsLen, char* szCipherInBytes);
+    int ConvertOtherFormat2Ciphertext(char* szCipher);
 
     char bitsCiphertextAnyLength[32768];
     char hexCiphertextAnyLength[16384];

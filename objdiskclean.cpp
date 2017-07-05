@@ -5,7 +5,7 @@
 #include <QDir>
 
 
-ObjDiskClean::ObjDiskClean(QObject *parent) :
+ObjDiskClean::ObjDiskClean(QObject* parent) :
     QObject(parent)
 {
     //m_lstCleanSuffix.push_back("*.~*");
@@ -53,14 +53,14 @@ void ObjDiskClean::clean()
 
     UINT typeDev = 0;
     wchar_t ch[4] = { 'X', ':', '\\', '\0' };
-    for( wchar_t c = 'A'; c <= 'Z'; c++ )
+    for(wchar_t c = 'A'; c <= 'Z'; c++)
     {
         ch[0] = c;
         typeDev = ::GetDriveType(ch);
-        if( typeDev == DRIVE_FIXED )
+        if(typeDev == DRIVE_FIXED)
         {
             QString strDev = QString::fromWCharArray(ch);
-            qDebug()<<"分区："<<strDev<<"开始清理";
+            qDebug() << "分区：" << strDev << "开始清理";
 
             findFiles(strDev);
         }
@@ -71,10 +71,10 @@ void ObjDiskClean::clean()
 
     for(QList<CleanItem*>::iterator it = m_lstCleanItems.begin(); it != m_lstCleanItems.end(); it++)
     {
-        qDebug()<<"name:"<<(*it)->m_strName<<"  size:"<<(*it)->m_nTotalSizeKb;
+        qDebug() << "name:" << (*it)->m_strName << "  size:" << (*it)->m_nTotalSizeKb;
         for(QList<CleanItem*>::iterator it2 = (*it)->m_lstChild.begin(); it2 != (*it)->m_lstChild.end(); it2++)
         {
-            qDebug()<<(*it2)->m_strFilePath;
+            qDebug() << (*it2)->m_strFilePath;
         }
     }
 
@@ -86,9 +86,9 @@ void ObjDiskClean::findFiles(QString strPath)
     QDir dir(strPath);
 
     if(!dir.exists())
-        return;
+    { return; }
 
-    dir.setFilter(QDir::Dirs|QDir::Files);
+    dir.setFilter(QDir::Dirs | QDir::Files);
 
     dir.setSorting(QDir::DirsFirst);
 
@@ -98,33 +98,34 @@ void ObjDiskClean::findFiles(QString strPath)
 
     bool bIsDir;
 
-    do{
-           QFileInfo fileInfo = list.at(i);
+    do
+    {
+        QFileInfo fileInfo = list.at(i);
 
-           if(fileInfo.fileName() == "." || fileInfo.fileName() == "..")
-           {
-                i++;
-                continue;
-           }
+        if(fileInfo.fileName() == "." || fileInfo.fileName() == "..")
+        {
+            i++;
+            continue;
+        }
 
-            bIsDir = fileInfo.isDir();
+        bIsDir = fileInfo.isDir();
 
-           if (bIsDir)
-           {
-               //fileInfo.size(),fileInfo.fileName(),fileInfo.path()
+        if(bIsDir)
+        {
+            //fileInfo.size(),fileInfo.fileName(),fileInfo.path()
 
-               findFiles(fileInfo.filePath());
-           }
-           else
-           {
-                //qDebug()<<"find file:"<<fileInfo.fileName();
+            findFiles(fileInfo.filePath());
+        }
+        else
+        {
+            //qDebug()<<"find file:"<<fileInfo.fileName();
 
-                QString strTmp = fileInfo.absoluteFilePath();
-                procFile(strTmp);
-           }
-           i++;
+            QString strTmp = fileInfo.absoluteFilePath();
+            procFile(strTmp);
+        }
+        i++;
     }
-    while(i<list.size());
+    while(i < list.size());
 }
 
 void ObjDiskClean::addCleanSuffix(QString strSuffix)
@@ -171,8 +172,8 @@ void ObjDiskClean::procFile(QString strFilePath)
 
     for(QList<QString>::iterator it = m_lstCleanSuffix.begin(); it != m_lstCleanSuffix.end(); it++)
     {
-        qDebug()<<"当前检查的后缀"<<*it;
-        qDebug()<<"当前文件的后缀"<<strCheckSuffix;
+        qDebug() << "当前检查的后缀" << *it;
+        qDebug() << "当前文件的后缀" << strCheckSuffix;
         if(*it == strCheckSuffix)
         {
             //该文件后缀已经在列表中，添加到其子列表中

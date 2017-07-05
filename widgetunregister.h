@@ -3,8 +3,9 @@
 
 #include <QDialog>
 
-namespace Ui {
-class WidgetUnregister;
+namespace Ui
+{
+    class WidgetUnregister;
 }
 
 class WidgetUnregister : public QDialog
@@ -12,16 +13,16 @@ class WidgetUnregister : public QDialog
     Q_OBJECT
 
 public:
-    explicit WidgetUnregister(QWidget *parent = 0);
+    explicit WidgetUnregister(QWidget* parent = 0);
     ~WidgetUnregister();
 
-    void setLabelText( QString str );
+    void setLabelText(QString str);
 
 public slots:
     void unregister();
 
 public:
-    Ui::WidgetUnregister *ui;
+    Ui::WidgetUnregister* ui;
 };
 
 #endif // WIDGETUNREGISTER_H

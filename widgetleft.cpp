@@ -10,7 +10,7 @@
 #include "widgetunregister.h"
 
 
-WidgetLeft::WidgetLeft(QWidget *parent) :
+WidgetLeft::WidgetLeft(QWidget* parent) :
     QWidget(parent)
 {
     m_nCurrentButton = 0;
@@ -26,7 +26,7 @@ WidgetLeft::WidgetLeft(QWidget *parent) :
 
     //容器背景
     QPalette palette;
-    palette.setBrush( QPalette::Window, QBrush(Global::s_clrWidgetLeft) );
+    palette.setBrush(QPalette::Window, QBrush(Global::s_clrWidgetLeft));
     setPalette(palette);
     setAutoFillBackground(true);
 
@@ -38,18 +38,18 @@ WidgetLeft::WidgetLeft(QWidget *parent) :
 
     //设置按钮
     QStringList string_list, string_list2;
-    string_list<<":/main/home"<<":/main/pcScan"<<":/main/fileRepair"<<":/main/diskClean"<<":/main/settings";
-    string_list2<<":/main/home2"<<":/main/pcScan2"<<":/main/fileRepair2"<<":/main/diskClean2"<<":/main/settings2";
+    string_list << ":/main/home" << ":/main/pcScan" << ":/main/fileRepair" << ":/main/diskClean" << ":/main/settings";
+    string_list2 << ":/main/home2" << ":/main/pcScan2" << ":/main/fileRepair2" << ":/main/diskClean2" << ":/main/settings2";
 
     QSignalMapper* signal_mapper = new QSignalMapper(this);
-    for( int i=0; i<string_list.size(); i++ )
+    for(int i = 0; i < string_list.size(); i++)
     {
         QPushButton* pButton = new QPushButton();
         m_pBtn[i] = pButton;
-//        pButton->setFixedSize( 234, 62 );
-//        QPalette pal = pButton->palette();
-//        pal.setColor(QPalette::Button,QColor(119,144,174));
-//        pButton->setPalette(pal);
+        //        pButton->setFixedSize( 234, 62 );
+        //        QPalette pal = pButton->palette();
+        //        pal.setColor(QPalette::Button,QColor(119,144,174));
+        //        pButton->setPalette(pal);
 
         QPixmap pixmap(string_list.at(i));
         QPixmap pixmap2(string_list2.at(i));
@@ -62,46 +62,46 @@ WidgetLeft::WidgetLeft(QWidget *parent) :
         pButton->setFocusPolicy(Qt::NoFocus); //隐藏虚框
 
         m_lstBtn.append(pButton);
-        connect( pButton, SIGNAL(clicked()), signal_mapper, SLOT(map()) );
-        signal_mapper->setMapping( pButton, QString::number(i, 10) );
+        connect(pButton, SIGNAL(clicked()), signal_mapper, SLOT(map()));
+        signal_mapper->setMapping(pButton, QString::number(i, 10));
 
-        button_layout->addWidget( pButton, 0, Qt::AlignLeft );
+        button_layout->addWidget(pButton, 0, Qt::AlignLeft);
         //button_layout->setSpacing(5);
     }
     m_pBtn[0]->setIcon(m_pixmap2[0]);
-    button_layout->addWidget( m_pBtnRegister, 0, Qt::AlignBottom | Qt::AlignHCenter );
-    button_layout->setContentsMargins( 4, 18, 0, 5 );
+    button_layout->addWidget(m_pBtnRegister, 0, Qt::AlignBottom | Qt::AlignHCenter);
+    button_layout->setContentsMargins(4, 18, 0, 5);
     setLayout(button_layout);
 
-    connect( signal_mapper, SIGNAL(mapped(QString)), this, SLOT(changePage(QString)) );
-    connect( m_pBtnRegister, &QPushButton::clicked, this, &WidgetLeft::registerDlg );
+    connect(signal_mapper, SIGNAL(mapped(QString)), this, SLOT(changePage(QString)));
+    connect(m_pBtnRegister, &QPushButton::clicked, this, &WidgetLeft::registerDlg);
 }
 
-void WidgetLeft::changePage( QString strPage )
+void WidgetLeft::changePage(QString strPage)
 {
     bool bOk;
-    int nIndex = strPage.toInt( &bOk, 10 );
+    int nIndex = strPage.toInt(&bOk, 10);
 
-//    for( int i=0; i<m_lstBtn.count(); i++ )
-//    {
-//        QPushButton* pBtn = m_lstBtn.at(i);
-//        if( current_index == i )
-//        {
-//            tool_button->setMousePress(true);
-//        }
-//        else
-//        {
-//            tool_button->setMousePress(false);
-//        }
-//    }
+    //    for( int i=0; i<m_lstBtn.count(); i++ )
+    //    {
+    //        QPushButton* pBtn = m_lstBtn.at(i);
+    //        if( current_index == i )
+    //        {
+    //            tool_button->setMousePress(true);
+    //        }
+    //        else
+    //        {
+    //            tool_button->setMousePress(false);
+    //        }
+    //    }
 
     setButtonPng(nIndex);
     emit changePage(nIndex);
 }
 
-void WidgetLeft::setButtonPng( int nIndex )
+void WidgetLeft::setButtonPng(int nIndex)
 {
-    if( m_nCurrentButton == nIndex )
+    if(m_nCurrentButton == nIndex)
     {
         return;
     }
@@ -112,7 +112,7 @@ void WidgetLeft::setButtonPng( int nIndex )
 }
 
 void WidgetLeft::registerDlg()
-{ 
+{
     if(!Global::s_bActive)
     {
         DlgRegisterKey dlg;
@@ -120,7 +120,8 @@ void WidgetLeft::registerDlg()
     }
     else
     {
-        QString str = QString("Application has been registered, the expiry date is %1-%2-%3").arg(Global::s_seriesNumber.nExpiredYear).arg(Global::s_seriesNumber.nExpiredMonth).arg(Global::s_seriesNumber.nExpiredDay);
+        QString str = QString("Application has been registered, the expiry date is %1-%2-%3").arg(
+                          Global::s_seriesNumber.nExpiredYear).arg(Global::s_seriesNumber.nExpiredMonth).arg(Global::s_seriesNumber.nExpiredDay);
         //QMessageBox::about( this, Global::s_strExeName, str );
         WidgetUnregister w;
         w.setLabelText(str);

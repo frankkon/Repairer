@@ -7,7 +7,7 @@
 
 #define SHADOW_WIDTH       5
 
-WidgetMain::WidgetMain(QWidget *parent) :
+WidgetMain::WidgetMain(QWidget* parent) :
     DialogDrop(parent)
 {
     m_pWidgetTop = new WidgetTop(this);
@@ -30,7 +30,7 @@ WidgetMain::WidgetMain(QWidget *parent) :
 
     //容器背景
     QPalette palette;
-    palette.setBrush( QPalette::Window, QBrush(QColor(0,0,0)) );
+    palette.setBrush(QPalette::Window, QBrush(QColor(0, 0, 0)));
     setPalette(palette);
     setAutoFillBackground(true);
 
@@ -52,15 +52,16 @@ WidgetMain::WidgetMain(QWidget *parent) :
 
     setMinimumSize(980, 700);
 
-    QDesktopWidget *deskdop = QApplication::desktop();
-    move((deskdop->width() - this->width())/2, (deskdop->height() - this->height())/2);
+    QDesktopWidget* deskdop = QApplication::desktop();
+    move((deskdop->width() - this->width()) / 2, (deskdop->height() - this->height()) / 2);
 
     //设置信号槽
     //connect( m_pWidgetLeft, WidgetLeft::changePage(int), this, WidgetMain::changePage(int) );
-    connect( m_pWidgetLeft, SIGNAL(changePage(int)), this, SLOT(changePage(int)) );
-    connect( m_pWidgetHome->m_pBtnSysScan, &QPushButton::clicked, this, &WidgetMain::systenScan );
+    connect(m_pWidgetLeft, SIGNAL(changePage(int)), this, SLOT(changePage(int)));
+    connect(m_pWidgetHome->m_pBtnSysScan, &QPushButton::clicked, this, &WidgetMain::systenScan);
 
-    connect(m_pTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconIsActived(QSystemTrayIcon::ActivationReason)));
+    connect(m_pTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this,
+            SLOT(iconIsActived(QSystemTrayIcon::ActivationReason)));
     connect(m_pTray, SIGNAL(showWidget()), this, SLOT(showWidget()));
 
     m_pTray->show();
@@ -68,40 +69,40 @@ WidgetMain::WidgetMain(QWidget *parent) :
     changePage(0);
 }
 
-void WidgetMain::changePage( int nCurPage )
+void WidgetMain::changePage(int nCurPage)
 {
     switch(nCurPage)
     {
-    case 0:
-    {
-        m_pStackWidget->setCurrentWidget(m_pWidgetHome);
-    }
+        case 0:
+        {
+            m_pStackWidget->setCurrentWidget(m_pWidgetHome);
+        }
         break;
-    case 1:
-    {
-        m_pStackWidget->setCurrentWidget(m_pWidgetSystemScan);
-        m_pWidgetSystemScan->startCheckDlls();
-    }
+        case 1:
+        {
+            m_pStackWidget->setCurrentWidget(m_pWidgetSystemScan);
+            m_pWidgetSystemScan->startCheckDlls();
+        }
         break;
-    case 2:
-    {
-        m_pStackWidget->setCurrentWidget(m_pWidgetFileRepair);
-    }
+        case 2:
+        {
+            m_pStackWidget->setCurrentWidget(m_pWidgetFileRepair);
+        }
         break;
-    case 3:
-    {
-        m_pStackWidget->setCurrentWidget(m_pWidgetDiskClean);
-    }
+        case 3:
+        {
+            m_pStackWidget->setCurrentWidget(m_pWidgetDiskClean);
+        }
         break;
-    case 4:
-    {
-        m_pStackWidget->setCurrentWidget(m_pWidgetOption);
-    }
+        case 4:
+        {
+            m_pStackWidget->setCurrentWidget(m_pWidgetOption);
+        }
         break;
-    default:
-    {
+        default:
+        {
 
-    }
+        }
         break;
     }
 }
@@ -121,10 +122,10 @@ void WidgetMain::showWidget()
 void WidgetMain::showMainMenu()
 {
     //设置主菜单出现的位置
-//    QPoint p = rect().topRight();
-//    p.setX(p.x() - 90);
-//    p.setY(p.y() + 25);
-//    main_menu->exec(this->mapToGlobal(p));
+    //    QPoint p = rect().topRight();
+    //    p.setX(p.x() - 90);
+    //    p.setY(p.y() + 25);
+    //    main_menu->exec(this->mapToGlobal(p));
 }
 
 void WidgetMain::iconIsActived(QSystemTrayIcon::ActivationReason reason)
@@ -132,19 +133,19 @@ void WidgetMain::iconIsActived(QSystemTrayIcon::ActivationReason reason)
     switch(reason)
     {
         //点击托盘图标之后松开
-    case QSystemTrayIcon::Trigger:
+        case QSystemTrayIcon::Trigger:
         {
             showWidget();
             break;
         }
         //双击托盘图标
-    case QSystemTrayIcon::DoubleClick:
+        case QSystemTrayIcon::DoubleClick:
         {
             showWidget();
             break;
         }
-    default:
-        break;
+        default:
+            break;
     }
 }
 

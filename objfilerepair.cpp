@@ -4,7 +4,7 @@
 #include <QFileInfo>
 #include <QMessageBox>
 
-ObjFileRepair::ObjFileRepair(QObject *parent) :
+ObjFileRepair::ObjFileRepair(QObject* parent) :
     QObject(parent)
 {
     m_pHttp = new Http(this);
@@ -12,14 +12,14 @@ ObjFileRepair::ObjFileRepair(QObject *parent) :
 
 
 
-    connect( m_pHttp, &Http::sigCurrentDownloadFile, this, &ObjFileRepair::CurrentDownloadFile );
-    connect( m_pHttp, &Http::sigDownloadFinished, this, &ObjFileRepair::downloadFinished );
+    connect(m_pHttp, &Http::sigCurrentDownloadFile, this, &ObjFileRepair::CurrentDownloadFile);
+    connect(m_pHttp, &Http::sigDownloadFinished, this, &ObjFileRepair::downloadFinished);
 }
 
 ObjFileRepair::~ObjFileRepair()
 {
     FileListDownload* p = NULL;
-    for( int i = 0; i < m_lstFiles.count(); i++ )
+    for(int i = 0; i < m_lstFiles.count(); i++)
     {
         p = m_lstFiles.at(i);
         delete p;
@@ -27,12 +27,12 @@ ObjFileRepair::~ObjFileRepair()
     }
 }
 
-void ObjFileRepair::CurrentDownloadFile( int nPercentage )
+void ObjFileRepair::CurrentDownloadFile(int nPercentage)
 {
     emit sigUpdateDownload(nPercentage);
 }
 
-void ObjFileRepair::downloadFile( QString strFile )
+void ObjFileRepair::downloadFile(QString strFile)
 {
     //QString strPath;
     //strPath = g_strDownloadPath + "\\" + strFile;
@@ -55,7 +55,7 @@ void ObjFileRepair::downloadFile( QString strFile )
     if(!Tool::isFileOrDirExist(Global::s_strDownloadPath))
     {
         //创建文件夹
-        Tool::createDirectory( Global::s_strDownloadPath, false );
+        Tool::createDirectory(Global::s_strDownloadPath, false);
     }
     else
     {
@@ -66,7 +66,7 @@ void ObjFileRepair::downloadFile( QString strFile )
     QString strSuffix = Tool::getFileSuffix(strFile);
     //QString strFileName = Tool::getFileName();
     strSuffix.toLower();
-    if( "dll" == strSuffix )
+    if("dll" == strSuffix)
     {
         strUrl += "/dll/";
         strUrl += strFile.at(0);
@@ -88,13 +88,13 @@ void ObjFileRepair::downloadFile( QString strFile )
     strDownload += ".rar";
 
     //QString strUrlTmp = getFileRepairUrl(strFile);
-    Global::saveIniData( "LastRepairFile", strFile );
-    m_pHttp->downloadFile( strUrl, strDownload );
+    Global::saveIniData("LastRepairFile", strFile);
+    m_pHttp->downloadFile(strUrl, strDownload);
 }
 
-void ObjFileRepair::downloadFinished( QString strFile, bool bSuccess )
+void ObjFileRepair::downloadFinished(QString strFile, bool bSuccess)
 {
-    qDebug()<<"ObjFileRepair::downloadFinished begin";
+    qDebug() << "ObjFileRepair::downloadFinished begin";
 
     FileListDownload* pDownload = new FileListDownload();
     pDownload->m_strFileName = m_strFileDownloadName;
@@ -107,7 +107,7 @@ void ObjFileRepair::downloadFinished( QString strFile, bool bSuccess )
         pDownload->m_strError = strFile;
         emit sigDownloadFinished(pDownload, false);
 
-        qDebug()<<"ObjFileRepair::downloadFinished end";
+        qDebug() << "ObjFileRepair::downloadFinished end";
         return;
     }
 
@@ -122,26 +122,26 @@ void ObjFileRepair::downloadFinished( QString strFile, bool bSuccess )
     if(!Tool::isFileOrDirExist(strSaveTmp))
     {
         //创建文件夹
-        Tool::createDirectory( strSaveTmp, false );
+        Tool::createDirectory(strSaveTmp, false);
     }
 
     if(!Tool::isFileOrDirExist(strSave))
     {
         //创建文件夹
-        Tool::createDirectory( strSave, false );
+        Tool::createDirectory(strSave, false);
     }
 
     QString str7z = Global::s_strCurrentPath + "\\" + "7z.exe";
-    Tool::uncompressFile( strFile, strSaveTmp, str7z );
+    Tool::uncompressFile(strFile, strSaveTmp, str7z);
     //Tool::openAndSelectFile(strSaveTmp);
 
-    qDebug()<<"ObjFileRepair::downloadFinished 2";
+    qDebug() << "ObjFileRepair::downloadFinished 2";
 
     //重新分配文件
     pDownload->m_strPath = strSave;
     pDownload->generateVersionList(strSaveTmp);
 
-    qDebug()<<"ObjFileRepair::downloadFinished 3";
+    qDebug() << "ObjFileRepair::downloadFinished 3";
 
     //删除原文件
     Tool::removeFilesinDir(strSaveTmp);
@@ -150,22 +150,22 @@ void ObjFileRepair::downloadFinished( QString strFile, bool bSuccess )
 
     m_lstFiles.push_back(pDownload);
 
-    qDebug()<<"ObjFileRepair::downloadFinished 4";
+    qDebug() << "ObjFileRepair::downloadFinished 4";
 
     //删除压缩文件
     Tool::deleteFile(strFile);
     m_strFileDownloadName.clear();
 
-    qDebug()<<"ObjFileRepair::downloadFinished 5";
+    qDebug() << "ObjFileRepair::downloadFinished 5";
 
     emit sigDownloadFinished(pDownload, true);
 
-    qDebug()<<"ObjFileRepair::downloadFinished end";
+    qDebug() << "ObjFileRepair::downloadFinished end";
 
-    Global::saveIniData( "LastRepairFile", "" );
+    Global::saveIniData("LastRepairFile", "");
 }
 
-void ObjFileRepair::openFile( int nIndex )
+void ObjFileRepair::openFile(int nIndex)
 {
     m_lstFiles[nIndex]->open();
 }
@@ -178,7 +178,7 @@ void ObjFileRepair::deleteDownloadFile(int nIndex)
 void ObjFileRepair::init()
 {
     m_strFilePathRepair = QString("%1\\FileRepair").arg(Global::s_strCurrentPath);
-    m_strFilePathRepair.replace( "/", "\\" );
+    m_strFilePathRepair.replace("/", "\\");
 
     //读取已下载的文件
     QDir dir(m_strFilePathRepair);
@@ -187,7 +187,8 @@ void ObjFileRepair::init()
         return;
     }
 
-    QDirIterator it( m_strFilePathRepair, QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot/*, QDirIterator::Subdirectories*/ );
+    QDirIterator it(m_strFilePathRepair,
+                    QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot/*, QDirIterator::Subdirectories*/);
     while(it.hasNext())
     {
         it.next();
@@ -198,7 +199,7 @@ void ObjFileRepair::init()
         pFileDownload->m_strPath = m_strFilePathRepair + "\\" + pFileDownload->m_strFileName;
         if(pFileDownload->loadVersionList())
         {
-            emit sigDownloadFinished( pFileDownload, true );
+            emit sigDownloadFinished(pFileDownload, true);
         }
         else
         {
@@ -211,7 +212,7 @@ void ObjFileRepair::init()
 
 }
 
-void ObjFileRepair::timerEvent(QTimerEvent *event)
+void ObjFileRepair::timerEvent(QTimerEvent* event)
 {
     m_pHttp->cancelDownload();
 }
@@ -222,7 +223,7 @@ QString ObjFileRepair::getFileRepairUrl(QString strFile)
     QString strSuffix = Tool::getFileSuffix(strFile);
     //QString strFileName = Tool::getFileName();
     strSuffix.toLower();
-    if( "dll" == strSuffix )
+    if("dll" == strSuffix)
     {
         strUrl += "/dll/";
         strUrl += strFile.at(0);

@@ -10,14 +10,14 @@ class ObjFileRepair : public QObject
 {
     Q_OBJECT
 public:
-    explicit ObjFileRepair(QObject *parent = 0);
+    explicit ObjFileRepair(QObject* parent = 0);
     ~ObjFileRepair();
 
     void deleteDownloadFile(int nIndex);
 
     void init();
 
-    void timerEvent(QTimerEvent *event);
+    void timerEvent(QTimerEvent* event);
 
 private:
     QString getFileRepairUrl(QString strFile);
@@ -25,14 +25,14 @@ private:
 
 
 signals:
-    void sigDownloadFinished( FileListDownload* pDownload, bool bSuccess );  //下载完毕通知UI
-    void sigUpdateDownload( int nPercentage );
+    void sigDownloadFinished(FileListDownload* pDownload, bool bSuccess);    //下载完毕通知UI
+    void sigUpdateDownload(int nPercentage);
 
 public slots:
-    void downloadFile( QString strFile );
-    void downloadFinished( QString strFile, bool bSuccess );
-    void CurrentDownloadFile( int nPercentage );
-    void openFile( int nIndex );
+    void downloadFile(QString strFile);
+    void downloadFinished(QString strFile, bool bSuccess);
+    void CurrentDownloadFile(int nPercentage);
+    void openFile(int nIndex);
 
 private:
     QList<FileListDownload*> m_lstFiles;

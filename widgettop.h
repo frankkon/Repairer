@@ -9,7 +9,7 @@ class WidgetTop : public QWidget
 {
     Q_OBJECT
 public:
-    explicit WidgetTop(QWidget *parent = 0);
+    explicit WidgetTop(QWidget* parent = 0);
 
 signals:
 

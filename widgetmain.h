@@ -17,14 +17,14 @@ class WidgetMain : public DialogDrop
 {
     Q_OBJECT
 public:
-    explicit WidgetMain(QWidget *parent = 0);
+    explicit WidgetMain(QWidget* parent = 0);
 
     void init();
 
 signals:
 
 public slots:
-    void changePage( int nCurPage );
+    void changePage(int nCurPage);
     void systenScan();
 
     void showWidget();

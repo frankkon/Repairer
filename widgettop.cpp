@@ -8,7 +8,7 @@
 #include "widgetmain.h"
 #include "widgetunregister.h"
 
-WidgetTop::WidgetTop(QWidget *parent) :
+WidgetTop::WidgetTop(QWidget* parent) :
     QWidget(parent)
 {
     m_pQLabLogo = new QLabel();
@@ -41,14 +41,14 @@ WidgetTop::WidgetTop(QWidget *parent) :
     m_pBtnClose->setStyleSheet("background-color:transparent;");
 
 
-//    QString str = m_pBtnRegister->text();
-//    QFont font = m_pBtnRegister->font();
-//    QFontMetrics fm(font);
-//    int n3 = fm.width(str);
-//    int n1 = m_pBtnRegister->fontMetrics().boundingRect(m_pBtnRegister->text()).width();
-//    int n2 = m_pBtnRegister->fontMetrics().width(m_pBtnRegister->text());
-    m_pBtnRegister->setFixedWidth(m_pBtnRegister->fontMetrics().boundingRect(m_pBtnRegister->text()).width()+10);
-    m_pBtnAbout->setFixedWidth(m_pBtnAbout->fontMetrics().boundingRect(m_pBtnAbout->text()).width()+10);
+    //    QString str = m_pBtnRegister->text();
+    //    QFont font = m_pBtnRegister->font();
+    //    QFontMetrics fm(font);
+    //    int n3 = fm.width(str);
+    //    int n1 = m_pBtnRegister->fontMetrics().boundingRect(m_pBtnRegister->text()).width();
+    //    int n2 = m_pBtnRegister->fontMetrics().width(m_pBtnRegister->text());
+    m_pBtnRegister->setFixedWidth(m_pBtnRegister->fontMetrics().boundingRect(m_pBtnRegister->text()).width() + 10);
+    m_pBtnAbout->setFixedWidth(m_pBtnAbout->fontMetrics().boundingRect(m_pBtnAbout->text()).width() + 10);
     //m_pBtnRegister->setFixedWidth(n3);
 
     //m_pBtnMinimize->setFixedSize( 28, 28 );
@@ -57,7 +57,7 @@ WidgetTop::WidgetTop(QWidget *parent) :
     {
         m_pQLabVersion->setText(Global::s_strVersion);
         QPalette pal = m_pBtnRegister->palette();
-        pal.setColor(QPalette::Foreground,QColor(255,255,255));
+        pal.setColor(QPalette::Foreground, QColor(255, 255, 255));
         m_pQLabVersion->setPalette(pal);
     }
 
@@ -66,8 +66,8 @@ WidgetTop::WidgetTop(QWidget *parent) :
     m_pBtnRegister->setCursor(Qt::PointingHandCursor);
     m_pBtnAbout->setCursor(Qt::PointingHandCursor);
     QPalette pal = m_pBtnRegister->palette();
-    pal.setColor(QPalette::ButtonText,QColor(255,255,255));
-    pal.setColor(QPalette::Button,Global::s_clrWidgetTop);
+    pal.setColor(QPalette::ButtonText, QColor(255, 255, 255));
+    pal.setColor(QPalette::Button, Global::s_clrWidgetTop);
     m_pBtnRegister->setPalette(pal);
     m_pBtnAbout->setPalette(pal);
     m_pBtnRegister->setFlat(true);
@@ -77,7 +77,7 @@ WidgetTop::WidgetTop(QWidget *parent) :
 
     //容器背景
     QPalette palette;
-    palette.setBrush( QPalette::Window, QBrush(Global::s_clrWidgetTop) );
+    palette.setBrush(QPalette::Window, QBrush(Global::s_clrWidgetTop));
     setPalette(palette);
     setAutoFillBackground(true);
 
@@ -85,24 +85,24 @@ WidgetTop::WidgetTop(QWidget *parent) :
     setFixedHeight(96);
 
     QHBoxLayout* layout = new QHBoxLayout();
-    layout->addWidget( m_pQLabLogo, 0, Qt::AlignVCenter );
+    layout->addWidget(m_pQLabLogo, 0, Qt::AlignVCenter);
     layout->setSpacing(30);
     //layout->addStretch();
-    layout->addWidget( m_pQLabVersion, 0, Qt::AlignVCenter );
+    layout->addWidget(m_pQLabVersion, 0, Qt::AlignVCenter);
     //layout->setSpacing(0);
-    layout->addWidget( m_pBtnRegister, 0, Qt::AlignVCenter | Qt::AlignRight  );
+    layout->addWidget(m_pBtnRegister, 0, Qt::AlignVCenter | Qt::AlignRight);
     layout->setSpacing(10);
-    layout->addWidget( m_pBtnAbout, 0, Qt::AlignVCenter | Qt::AlignLeft  );
-    layout->addWidget( m_pBtnMinimize, 0, Qt::AlignTop );
-    layout->addWidget( m_pBtnClose, 0, Qt::AlignTop );
+    layout->addWidget(m_pBtnAbout, 0, Qt::AlignVCenter | Qt::AlignLeft);
+    layout->addWidget(m_pBtnMinimize, 0, Qt::AlignTop);
+    layout->addWidget(m_pBtnClose, 0, Qt::AlignTop);
     layout->setContentsMargins(15, 0, 5, 0);
 
     setLayout(layout);
 
-    connect( m_pBtnMinimize, &QPushButton::clicked, this, &WidgetTop::minimizeWidget );
-    connect( m_pBtnClose, &QPushButton::clicked, (WidgetMain*)parent, &WidgetMain::hide );
-    connect( m_pBtnRegister, &QPushButton::clicked, this, &WidgetTop::registerDlg );
-    connect( m_pBtnAbout, &QPushButton::clicked, this, &WidgetTop::about );
+    connect(m_pBtnMinimize, &QPushButton::clicked, this, &WidgetTop::minimizeWidget);
+    connect(m_pBtnClose, &QPushButton::clicked, (WidgetMain*)parent, &WidgetMain::hide);
+    connect(m_pBtnRegister, &QPushButton::clicked, this, &WidgetTop::registerDlg);
+    connect(m_pBtnAbout, &QPushButton::clicked, this, &WidgetTop::about);
 }
 
 void WidgetTop::closeWidget()
@@ -124,7 +124,8 @@ void WidgetTop::registerDlg()
     }
     else
     {
-        QString str = QString("Application has been registered, the expiry date is %1-%2-%3").arg(Global::s_seriesNumber.nExpiredYear).arg(Global::s_seriesNumber.nExpiredMonth).arg(Global::s_seriesNumber.nExpiredDay);
+        QString str = QString("Application has been registered, the expiry date is %1-%2-%3").arg(
+                          Global::s_seriesNumber.nExpiredYear).arg(Global::s_seriesNumber.nExpiredMonth).arg(Global::s_seriesNumber.nExpiredDay);
         //QMessageBox::about( this, Global::s_strExeName, str );
         WidgetUnregister w;
         w.setLabelText(str);
@@ -134,5 +135,6 @@ void WidgetTop::registerDlg()
 
 void WidgetTop::about()
 {
-    QMessageBox::about( this, Global::s_strExeName, "DLLEscort is DLL Repair Software, fixes .dll missing files, repairs .sys bluescreen problems, resolves .exe high CPU / Memory usage issues and downloads all DLL files. \n\nDLLEscort is the number-one DLL fixer for repairing your Windows PC problems. It fixes DLL errors, cleans and defragments registry, optimizes Windows, restores your system and makes your computer faster and more secure." );
+    QMessageBox::about(this, Global::s_strExeName,
+                       "DLLEscort is DLL Repair Software, fixes .dll missing files, repairs .sys bluescreen problems, resolves .exe high CPU / Memory usage issues and downloads all DLL files. \n\nDLLEscort is the number-one DLL fixer for repairing your Windows PC problems. It fixes DLL errors, cleans and defragments registry, optimizes Windows, restores your system and makes your computer faster and more secure.");
 }

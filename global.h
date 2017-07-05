@@ -27,7 +27,7 @@ class Global
 {
 public:
     static void checkSystemVersion();
-    static bool decodeSeriesNumber( QString strEncode );
+    static bool decodeSeriesNumber(QString strEncode);
     static QString getSysInfo();
 
     static void initGlobalData();
@@ -36,15 +36,15 @@ public:
     static void readIni();
     static void readCurrentPath();
     static void saveCurrentPath();
-    static void saveFreeFixUnRegister( QString strFlag );
+    static void saveFreeFixUnRegister(QString strFlag);
     static QString readFreeFixUnRegister();
 
-    static void saveIniData( QString strKey, QString strValue );
-    static QString readIniData( QString strKey );
+    static void saveIniData(QString strKey, QString strValue);
+    static QString readIniData(QString strKey);
 
 
 private:
-    static bool isKeyUnregistered( QString strKey );
+    static bool isKeyUnregistered(QString strKey);
 
 
 

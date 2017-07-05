@@ -5,15 +5,16 @@
 #include <QPushButton>
 #include "objdiskclean.h"
 
-namespace Ui {
-class WidgetDiskClean;
+namespace Ui
+{
+    class WidgetDiskClean;
 }
 
 class WidgetDiskClean : public QWidget
 {
     Q_OBJECT
 public:
-    explicit WidgetDiskClean(QWidget *parent = 0);
+    explicit WidgetDiskClean(QWidget* parent = 0);
     ~WidgetDiskClean();
 
 signals:
@@ -24,7 +25,7 @@ public slots:
     void cleanFinish();
 
 private:
-    Ui::WidgetDiskClean *ui;
+    Ui::WidgetDiskClean* ui;
 
 
     ObjDiskClean* m_pObjDiskClean;

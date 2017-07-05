@@ -6,7 +6,7 @@
 #include <QDir>
 #include <QDirIterator>
 
-FileListDownload::FileListDownload(QObject *parent) :
+FileListDownload::FileListDownload(QObject* parent) :
     QObject(parent)
 {
 
@@ -17,24 +17,24 @@ void FileListDownload::deleteFile()
 
 }
 
-void FileListDownload::addVersionItem( QVector<VersionListItem*>& vct, VersionListItem* pItem )
+void FileListDownload::addVersionItem(QVector<VersionListItem*>& vct, VersionListItem* pItem)
 {
-    for( int i = 0; i < vct.size(); i++ )
+    for(int i = 0; i < vct.size(); i++)
     {
         QString strFilePath;
         if(pItem->m_strFileVersion.isEmpty())
         {
-            if( vct[i]->m_fSizeKb <= pItem->m_fSizeKb )
+            if(vct[i]->m_fSizeKb <= pItem->m_fSizeKb)
             {
-                vct.insert( i, pItem );
+                vct.insert(i, pItem);
                 return;
             }
         }
         else
         {
-            if( VersionListItem::isGreaterVersion( pItem->m_strFileVersion, vct[i]->m_strFileVersion ) )
+            if(VersionListItem::isGreaterVersion(pItem->m_strFileVersion, vct[i]->m_strFileVersion))
             {
-                vct.insert( i, pItem );
+                vct.insert(i, pItem);
                 return;
             }
         }
@@ -45,7 +45,7 @@ void FileListDownload::addVersionItem( QVector<VersionListItem*>& vct, VersionLi
     vct.push_back(pItem);
 }
 
-void FileListDownload::generateVersionList( QString strPathTmp )
+void FileListDownload::generateVersionList(QString strPathTmp)
 {
     QDir dir(strPathTmp);
     if(!dir.exists())
@@ -55,13 +55,13 @@ void FileListDownload::generateVersionList( QString strPathTmp )
 
     bool bOneVersion = false;
 
-    QDirIterator it( strPathTmp, QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories );
+    QDirIterator it(strPathTmp, QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
     while(it.hasNext())
     {
         it.next();
         QFileInfo info = it.fileInfo();
 
-        if( info.fileName() == "DLL工具.exe" )
+        if(info.fileName() == "DLL工具.exe")
         {
             continue;
         }
@@ -69,7 +69,7 @@ void FileListDownload::generateVersionList( QString strPathTmp )
         QString strPathOrg = info.absoluteFilePath();
         QString strFileVersion = Tool::getFileVersion(strPathOrg);
         float fSizeKb = Tool::getFileSize(strPathOrg);
-        if( fSizeKb == 0 )
+        if(fSizeKb == 0)
         {
             continue;
         }
@@ -85,14 +85,14 @@ void FileListDownload::generateVersionList( QString strPathTmp )
             pItem->m_bX86 = true;
             pItem->m_strFilePath += "x86\\";
 
-            addVersionItem( m_vctVersionX86, pItem );
+            addVersionItem(m_vctVersionX86, pItem);
         }
         else
         {
             pItem->m_bX86 = false;
             pItem->m_strFilePath += "x64\\";
 
-            addVersionItem( m_vctVersionX64, pItem );
+            addVersionItem(m_vctVersionX64, pItem);
         }
 
 
@@ -112,15 +112,15 @@ void FileListDownload::generateVersionList( QString strPathTmp )
 
         pItem->m_strFilePath += "\\";
         pItem->m_strFilePath += m_strFileName;
-        Tool::createDirectory( pItem->m_strFilePath, true );
+        Tool::createDirectory(pItem->m_strFilePath, true);
 
         //如果没有注册，只保留一个文件
         if(Global::s_bActive)
-        { 
-            if(!QFile::copy( strPathOrg, pItem->m_strFilePath ))
+        {
+            if(!QFile::copy(strPathOrg, pItem->m_strFilePath))
             {
                 QString strTmp = QString("copy %1 to %2 failed").arg(strPathOrg).arg(pItem->m_strFilePath);
-                qDebug()<<strTmp;
+                qDebug() << strTmp;
             }
 
             {
@@ -131,10 +131,10 @@ void FileListDownload::generateVersionList( QString strPathTmp )
         {
             if(!bOneVersion)
             {
-                if(!QFile::copy( strPathOrg, pItem->m_strFilePath ))
+                if(!QFile::copy(strPathOrg, pItem->m_strFilePath))
                 {
                     QString strTmp = QString("copy %1 to %2 failed").arg(strPathOrg).arg(pItem->m_strFilePath);
-                    qDebug()<<strTmp;
+                    qDebug() << strTmp;
                 }
 
                 {
@@ -156,24 +156,24 @@ void FileListDownload::generateVersionList( QString strPathTmp )
 
 bool FileListDownload::loadVersionList()
 {
-//    QDirIterator it( m_strPath, QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot/*, QDirIterator::Subdirectories*/ );
-//    while(it.hasNext())
-//    {
-//        it.next();
-//        QFileInfo info = it.fileInfo();
+    //    QDirIterator it( m_strPath, QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot/*, QDirIterator::Subdirectories*/ );
+    //    while(it.hasNext())
+    //    {
+    //        it.next();
+    //        QFileInfo info = it.fileInfo();
 
-//        if( info.isDir() && info.fileName() == "x86" )
-//        {
-//            int n = 0;
-//        }
-//        else if( info.isDir() && info.fileName() == "x64" )
-//        {
-//            int n = 0;
-//        }
-//    }
+    //        if( info.isDir() && info.fileName() == "x86" )
+    //        {
+    //            int n = 0;
+    //        }
+    //        else if( info.isDir() && info.fileName() == "x64" )
+    //        {
+    //            int n = 0;
+    //        }
+    //    }
     bool bHas = false;
 
-    QDirIterator it( m_strPath, QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories );
+    QDirIterator it(m_strPath, QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
     while(it.hasNext())
     {
         bHas = true;
@@ -190,7 +190,7 @@ bool FileListDownload::loadVersionList()
         pItem->m_fSizeKb = fSizeKb;
         pItem->m_strFilePath = m_strPath + "\\";
 
-        if( 0 == fSizeKb )
+        if(0 == fSizeKb)
         {
             pItem->m_bEmpty = true;
         }
@@ -205,14 +205,14 @@ bool FileListDownload::loadVersionList()
             pItem->m_bX86 = true;
             pItem->m_strFilePath += "x86\\";
 
-            addVersionItem( m_vctVersionX86, pItem );
+            addVersionItem(m_vctVersionX86, pItem);
         }
         else
         {
             pItem->m_bX86 = false;
             pItem->m_strFilePath += "x64\\";
 
-            addVersionItem( m_vctVersionX64, pItem );
+            addVersionItem(m_vctVersionX64, pItem);
         }
 
         //如果能获取版本号，则用版本号做文件夹名 v_1.2.0.0

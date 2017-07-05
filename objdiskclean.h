@@ -9,7 +9,7 @@ class ObjDiskClean : public QObject
 
     Q_OBJECT
 public:
-    explicit ObjDiskClean(QObject *parent = 0);
+    explicit ObjDiskClean(QObject* parent = 0);
     ~ObjDiskClean();
 
     void addCleanSuffix(QString strSuffix);

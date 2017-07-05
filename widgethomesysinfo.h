@@ -4,28 +4,29 @@
 #include <QWidget>
 #include <QLabel>
 
-namespace Ui {
-class WidgetHomeSysInfo;
+namespace Ui
+{
+    class WidgetHomeSysInfo;
 }
 
 class WidgetHomeSysInfo : public QWidget
 {
     Q_OBJECT
 public:
-    explicit WidgetHomeSysInfo(QWidget *parent = 0);
+    explicit WidgetHomeSysInfo(QWidget* parent = 0);
 
 private:
     void initLayout();
 
 protected:
-    void paintEvent(QPaintEvent * event);
+    void paintEvent(QPaintEvent* event);
 
 signals:
 
 public slots:
 
 private:
-    Ui::WidgetHomeSysInfo *ui;
+    Ui::WidgetHomeSysInfo* ui;
 
     QLabel* m_pLabPc;
     QLabel* m_pLabText1;

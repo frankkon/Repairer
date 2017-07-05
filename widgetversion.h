@@ -4,8 +4,9 @@
 #include "dialogdrop.h"
 #include "filelistdownload.h"
 
-namespace Ui {
-class WidgetVersion;
+namespace Ui
+{
+    class WidgetVersion;
 }
 
 class WidgetVersion : public DialogDrop
@@ -13,11 +14,11 @@ class WidgetVersion : public DialogDrop
     Q_OBJECT
 
 public:
-    explicit WidgetVersion( FileListDownload* pFileList, QWidget *parent = 0 );
+    explicit WidgetVersion(FileListDownload* pFileList, QWidget* parent = 0);
     ~WidgetVersion();
 
 private:
-    Ui::WidgetVersion *ui;
+    Ui::WidgetVersion* ui;
 };
 
 #endif // WIDGETVERSION_H

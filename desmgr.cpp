@@ -5,10 +5,10 @@ DesMgr::DesMgr()
     myDES = new yxyDES2;
 }
 
-QString DesMgr::decrypt( QString strCode )
+QString DesMgr::decrypt(QString strCode)
 {
     QByteArray ba = strCode.toLatin1();
-    char *cstr = ba.data();
+    char* cstr = ba.data();
 
     memset(szSourceKey1, 0, 8);
     char szSourceKey1[8] = { '5', '5', '5', '5', '5', '7', '8', '7' };
@@ -24,19 +24,19 @@ QString DesMgr::decrypt( QString strCode )
     return strRtn;
 }
 
-void DesMgr::ConvertCiphertext2OtherFormat(int iBitsLen, char *szCipherInBytes)
+void DesMgr::ConvertCiphertext2OtherFormat(int iBitsLen, char* szCipherInBytes)
 {
     memset(hexCiphertextAnyLength, 0, 16384);
     memset(bitsCiphertextAnyLength, 0, 32768);
     myDES->Bytes2Bits(szCipherInBytes, bitsCiphertextAnyLength, iBitsLen);
     myDES->Bits2Hex(hexCiphertextAnyLength, bitsCiphertextAnyLength, iBitsLen);
-    for (int i = 0; i < iBitsLen; i++)
+    for(int i = 0; i < iBitsLen; i++)
     {
         bitsCiphertextAnyLength[i] += 48;
     }
 }
 
-int DesMgr::ConvertOtherFormat2Ciphertext(char *szCipher)
+int DesMgr::ConvertOtherFormat2Ciphertext(char* szCipher)
 {
     int iLen = 0;
     memset(szCiphertextData, 0, 8192);

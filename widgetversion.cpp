@@ -1,7 +1,7 @@
 #include "widgetversion.h"
 #include "ui_widgetversion.h"
 
-WidgetVersion::WidgetVersion( FileListDownload* pFileList, QWidget *parent ) :
+WidgetVersion::WidgetVersion(FileListDownload* pFileList, QWidget* parent) :
     DialogDrop(parent),
     ui(new Ui::WidgetVersion)
 {

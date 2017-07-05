@@ -10,7 +10,7 @@ class CleanItem : public QObject
 {
     Q_OBJECT
 public:
-    explicit CleanItem(QObject *parent = 0);
+    explicit CleanItem(QObject* parent = 0);
     ~CleanItem();
 
 signals:

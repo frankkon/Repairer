@@ -2,7 +2,7 @@
 #include "tool.h"
 #include "dlgregisterkey.h"
 
-VersionListItem::VersionListItem(QObject *parent) :
+VersionListItem::VersionListItem(QObject* parent) :
     QObject(parent)
 {
     m_fSizeKb = 0.f;
@@ -10,7 +10,7 @@ VersionListItem::VersionListItem(QObject *parent) :
     m_bEmpty = true;
 }
 
-bool VersionListItem::isGreaterVersion( QString sV1, QString sV2 )
+bool VersionListItem::isGreaterVersion(QString sV1, QString sV2)
 {
     bool bV1Greater = false;
     //int nTmp1 = 0, nTmp2 = 0;
@@ -26,26 +26,26 @@ bool VersionListItem::isGreaterVersion( QString sV1, QString sV2 )
         int n1 = s1.toInt();
         int n2 = s2.toInt();
 
-        if( n1 > n2 )
+        if(n1 > n2)
         {
             bV1Greater = true;
             break;
         }
-        else if( n1 < n2 )
+        else if(n1 < n2)
         {
             break;
         }
 
-        if( i1 > 0 && i2 == -1 )
+        if(i1 > 0 && i2 == -1)
         {
             bV1Greater = true;
             break;
         }
-        else if(  i1 == -1 && i2 > 0 )
+        else if(i1 == -1 && i2 > 0)
         {
             break;
         }
-        else if( i1 == -1 && i2 == -1 )
+        else if(i1 == -1 && i2 == -1)
         {
             break;
         }
@@ -57,9 +57,9 @@ bool VersionListItem::isGreaterVersion( QString sV1, QString sV2 )
     return bV1Greater;
 }
 
-bool VersionListItem::isGreaterVersion( VersionListItem* p )
+bool VersionListItem::isGreaterVersion(VersionListItem* p)
 {
-    return VersionListItem::isGreaterVersion( m_strFileVersion, p->m_strFileVersion );
+    return VersionListItem::isGreaterVersion(m_strFileVersion, p->m_strFileVersion);
 }
 
 void VersionListItem::open()

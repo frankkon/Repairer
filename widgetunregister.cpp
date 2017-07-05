@@ -8,14 +8,14 @@
 #include <QDebug>
 #include <QMessageBox>
 
-WidgetUnregister::WidgetUnregister(QWidget *parent) :
+WidgetUnregister::WidgetUnregister(QWidget* parent) :
     QDialog(parent),
     ui(new Ui::WidgetUnregister)
 {
     ui->setupUi(this);
 
-    connect( ui->pushButton_unregister, &QPushButton::clicked, this, &WidgetUnregister::unregister );
-    connect( ui->pushButton_close, &QPushButton::clicked, this, &WidgetUnregister::close );
+    connect(ui->pushButton_unregister, &QPushButton::clicked, this, &WidgetUnregister::unregister);
+    connect(ui->pushButton_close, &QPushButton::clicked, this, &WidgetUnregister::close);
 }
 
 WidgetUnregister::~WidgetUnregister()
@@ -23,14 +23,15 @@ WidgetUnregister::~WidgetUnregister()
     delete ui;
 }
 
-void WidgetUnregister::setLabelText( QString str )
+void WidgetUnregister::setLabelText(QString str)
 {
     ui->label->setText(str);
 }
 
 void WidgetUnregister::unregister()
 {
-    if( QMessageBox::No == QMessageBox::question( this, Global::s_strExeName, "If you are unhappy with your purchase, for any reason, simply contact us via e-mail for a full refund.\ndllescort.com@gmail.com" ))
+    if(QMessageBox::No == QMessageBox::question(this, Global::s_strExeName,
+            "If you are unhappy with your purchase, for any reason, simply contact us via e-mail for a full refund.\ndllescort.com@gmail.com"))
     {
         return;
     }
@@ -40,13 +41,13 @@ void WidgetUnregister::unregister()
 
     if(!Tool::isFileOrDirExist(strPath))
     {
-        Tool::createDirectory(strPath,true);
+        Tool::createDirectory(strPath, true);
     }
 
     QFile file(strPath);
     if(!file.open(QIODevice::ReadWrite | QIODevice::Text))
     {
-        qDebug()<<"open file "<<strPath<<" failed,error:"<<file.errorString();
+        qDebug() << "open file " << strPath << " failed,error:" << file.errorString();
     }
     else
     {
@@ -60,7 +61,7 @@ void WidgetUnregister::unregister()
     while(!txtInput.atEnd())
     {
         QString strLine = txtInput.readLine();
-        if( strLine == Global::s_seriesNumber.strEndode )
+        if(strLine == Global::s_seriesNumber.strEndode)
         {
             bNew = false;
             break;
@@ -72,10 +73,10 @@ void WidgetUnregister::unregister()
     {
         if(!bNoLine)
         {
-            txtInput<<"\r\n";
+            txtInput << "\r\n";
         }
 
-        txtInput<<Global::s_seriesNumber.strEndode;
+        txtInput << Global::s_seriesNumber.strEndode;
     }
 
     file.close();
@@ -84,5 +85,5 @@ void WidgetUnregister::unregister()
 
     QDialog::close();
 
-    QMessageBox::about( this, Global::s_strExeName, "Please contact us for sending mail dllescort.com@gmail.com" );
+    QMessageBox::about(this, Global::s_strExeName, "Please contact us for sending mail dllescort.com@gmail.com");
 }

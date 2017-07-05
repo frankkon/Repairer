@@ -7,11 +7,11 @@ class VersionListItem : public QObject
 {
     Q_OBJECT
 public:
-    explicit VersionListItem(QObject *parent = 0);
+    explicit VersionListItem(QObject* parent = 0);
 
-    static bool isGreaterVersion( QString sV1, QString sV2 );  //V1的版本号大 返回true 否则返回false
+    static bool isGreaterVersion(QString sV1, QString sV2);    //V1的版本号大 返回true 否则返回false
 
-    bool isGreaterVersion( VersionListItem* p );
+    bool isGreaterVersion(VersionListItem* p);
 
 signals:
 

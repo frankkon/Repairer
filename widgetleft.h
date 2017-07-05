@@ -9,17 +9,17 @@ class WidgetLeft : public QWidget
 {
     Q_OBJECT
 public:
-    explicit WidgetLeft(QWidget *parent = 0);
+    explicit WidgetLeft(QWidget* parent = 0);
 
 signals:
-    void changePage( int nCurPage );
+    void changePage(int nCurPage);
 
 public slots:
-    void changePage( QString strPage );
+    void changePage(QString strPage);
     void registerDlg();
 
 private:
-    void setButtonPng( int nIndex );
+    void setButtonPng(int nIndex);
 
 private:
     QPushButton* m_pBtn[5];

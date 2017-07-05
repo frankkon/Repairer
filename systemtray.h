@@ -9,7 +9,7 @@ class SystemTray : public QSystemTrayIcon
 {
     Q_OBJECT
 public:
-    explicit SystemTray(QObject *parent = 0);
+    explicit SystemTray(QObject* parent = 0);
 
     void translateLanguage();
 

@@ -8,24 +8,24 @@ class  Http : public QObject
 {
     Q_OBJECT
 public:
-    explicit Http(QObject *parent = 0);
+    explicit Http(QObject* parent = 0);
     ~Http();
 
-    void downloadFile( QString strUrl, QString strSavePath );
+    void downloadFile(QString strUrl, QString strSavePath);
     void cancelDownload();
 
-    qint64 getFileSize(QString url ,int tryTimes); //请求的文件服务器不存在，返回-1
+    qint64 getFileSize(QString url , int tryTimes); //请求的文件服务器不存在，返回-1
 
 signals:
-    void sigCurrentDownloadFile( int nPercentage );
-    void sigDownloadFinished( QString strFile, bool bSuccess );
+    void sigCurrentDownloadFile(int nPercentage);
+    void sigDownloadFinished(QString strFile, bool bSuccess);
 
 public slots:
 
     void downloadError(QNetworkReply::NetworkError code);
     void downloadFinished();
     void downloadReadyRead();
-    void updateDataReadProgress( qint64 bytesReceived, qint64 bytesTotal );
+    void updateDataReadProgress(qint64 bytesReceived, qint64 bytesTotal);
 
     void onDownloadTimer();
 

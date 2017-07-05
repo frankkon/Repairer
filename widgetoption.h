@@ -3,8 +3,9 @@
 
 #include <QWidget>
 
-namespace Ui {
-class WidgetOption;
+namespace Ui
+{
+    class WidgetOption;
 }
 
 class WidgetOption : public QWidget
@@ -12,14 +13,14 @@ class WidgetOption : public QWidget
     Q_OBJECT
 
 public:
-    explicit WidgetOption(QWidget *parent = 0);
+    explicit WidgetOption(QWidget* parent = 0);
     ~WidgetOption();
 
 public slots:
     void apply();
 
 private:
-    Ui::WidgetOption *ui;
+    Ui::WidgetOption* ui;
 };
 
 #endif // WIDGETOPTION_H

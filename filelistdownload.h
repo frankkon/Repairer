@@ -10,9 +10,9 @@ class FileListDownload : public QObject
 {
     Q_OBJECT
 public:
-    explicit FileListDownload(QObject *parent = 0);
+    explicit FileListDownload(QObject* parent = 0);
 
-    void generateVersionList( QString strPathTmp );
+    void generateVersionList(QString strPathTmp);
     bool loadVersionList();  //成功读取 返回true 没有文件 返回false
 
     void open();
@@ -24,7 +24,7 @@ public slots:
 
 
 private:
-    void addVersionItem( QVector<VersionListItem*>& vct, VersionListItem* pItem );
+    void addVersionItem(QVector<VersionListItem*>& vct, VersionListItem* pItem);
 
 public:
 

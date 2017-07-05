@@ -4,14 +4,14 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
-WidgetHome::WidgetHome(QWidget *parent) :
+WidgetHome::WidgetHome(QWidget* parent) :
     QWidget(parent)
 {
     m_pWidgetSysInfo = new WidgetHomeSysInfo();
 
     //容器背景
     QPalette palette;
-    palette.setBrush( QPalette::Window, QBrush(QColor(105,114,124)) );
+    palette.setBrush(QPalette::Window, QBrush(QColor(105, 114, 124)));
     setPalette(palette);
     setAutoFillBackground(true);
 
@@ -39,16 +39,16 @@ void WidgetHome::initLayout()
     //顶部色块
     QLabel* pLabTop = new QLabel();
     QPalette palette;
-    palette.setBrush( QPalette::Window, QBrush(Global::s_clrWidgetLeft) );
+    palette.setBrush(QPalette::Window, QBrush(Global::s_clrWidgetLeft));
     pLabTop->setPalette(palette);
     pLabTop->setFixedHeight(12);
 
     QVBoxLayout* pLayout = new QVBoxLayout();
     pLayout->addWidget(pLabTop);
     pLayout->addWidget(m_pWidgetSysInfo);
-    pLayout->addWidget( m_pBtnSysScan, 0, Qt::AlignRight );
+    pLayout->addWidget(m_pBtnSysScan, 0, Qt::AlignRight);
 
-    pLayout->setContentsMargins( 0, 0, 0, 0 );
+    pLayout->setContentsMargins(0, 0, 0, 0);
 
     setLayout(pLayout);
 

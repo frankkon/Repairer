@@ -10,7 +10,7 @@ class WidgetHome : public QWidget
 {
     Q_OBJECT
 public:
-    explicit WidgetHome(QWidget *parent = 0);
+    explicit WidgetHome(QWidget* parent = 0);
     ~WidgetHome();
 
 private:
