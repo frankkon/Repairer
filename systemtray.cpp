@@ -21,7 +21,11 @@ void SystemTray::createAction()
     m_pMenu->setFixedWidth(100);
 
     connect(m_pActOpen, SIGNAL(triggered()), this, SIGNAL(showWidget()));
-    connect(m_pActLayout, SIGNAL(triggered()), parent(), SLOT(close()));
+    // BEGIN: Modified by kongjun, 2017/7/8 
+    //这里直接使用close退出会出现报错：“thread still running...”
+    //connect(m_pActLayout, SIGNAL(triggered()), parent(), SLOT(close()));
+    connect(m_pActLayout, SIGNAL(triggered()), parent(), SLOT(onCloseApp()));
+    // END:   Modified by kongjun, 2017/7/8 
 }
 
 void SystemTray::addActions()

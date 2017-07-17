@@ -34,4 +34,10 @@
         <file alias="reg">Res/register/reg.png</file>
         <file alias="close">Res/register/x.png</file>
     </qresource>
+    <qresource prefix="/disk_clean">
+				<file alias="file_err">Res/disk_clean/file_err.png</file>
+				<file alias="reg_err">Res/disk_clean/reg_err.png</file>
+				<file alias="disk_clean_active">Res/disk_clean/disk_clean_active.gif</file>
+        <file alias="disk_clean_static">Res/disk_clean/disk_clean_static.png</file>
+    </qresource>
 </RCC>

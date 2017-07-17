@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <cleanitem.h>
+#include "cdiskscanconfig.h"
 
 class ObjDiskClean : public QObject
 {
@@ -12,33 +13,49 @@ public:
     explicit ObjDiskClean(QObject* parent = 0);
     ~ObjDiskClean();
 
-    void addCleanSuffix(QString strSuffix);
-    void removeCleanSuffix(QString strSuffix);
-
-    void addCleanFile(QString strFile);
-    void removeCleanFile(QString strFile);
-
-
-private:
-    void findFiles(QString strPath);
-    void procFile(QString strFilePath);  //判断是否删除该文件
-
-    CleanItem* addCleanItem(int nType, QString strName, QString strFilePath);
-    void clearAllItems();
-
 signals:
-    void sigUpdateCurrentCheckFile(bool bClean, QString strFilePath, CleanItem* pItem);
-    void sigCleanFinish();
+//    void sigUpdateCurrentCheckFile(bool bClean, QString strFilePath, CleanItem* pItem);
+
+    //通知界面更新当前扫描进展
+    void sigNotifyUIUpdateScanProgress(qint64 fileCount, QString fileDesc, QString currentFile);
+
+    //通知界面更新当前清理进展
+    void sigNotifyUIUpdateCleanProgress(qint64 fileCount, QString fileDesc, QString currentFile);
+
+    //通知界面完成所有错误扫描
+    void sigNotifyUIScanFinished(qint64 iTotalFileErrors, qint64 iTotalRegErrors);
+
+    //通知界面完成所有错误清理
+    void sigNotifyUICleanFinished();
 
 public slots:
-    void clean();
+    //扫描所有注册表错误和磁盘垃圾
+    void scanAllErrors();
+
+    //清理所有注册表错误和磁盘垃圾
+    void cleanAllErrors();
+    
+public:
+//    QList<CleanItem*> m_lstNeedToBeCleanedItems;
 
 private:
-    QList<QString> m_lstCleanSuffix;
-    QList<QString> m_lstCleanFile;
+    void scanAllTrashFiles();
+    void scanAllRegErrors();
+    void cleanAllTrashFiles();
+    void cleanAllRegErrors();
+    void scanTrashFilesInPath(TDiskScanInfo* scanInfo);
 
-public:
-    QList<CleanItem*> m_lstCleanItems;
+    //替换目录中的环境变量
+    void replaceEnv(QString& srcDir);
+
+
+private:
+//    QList<QString> m_lstTrashFileSuffix;
+//    QList<QString> m_lstNeedToBeCleanedFiles;
+    CDiskScanConfig* m_pDiskScanConfig;
+    qint64 m_iTotalScanedFiles;
+    qint64 m_iTotalScanedRegs;
+
 };
 
 #endif // OBJDISKCLEAN_H

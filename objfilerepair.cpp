@@ -212,7 +212,7 @@ void ObjFileRepair::init()
 
 }
 
-void ObjFileRepair::timerEvent(QTimerEvent* event)
+void ObjFileRepair::timerEvent(QTimerEvent* /*event*/)
 {
     m_pHttp->cancelDownload();
 }

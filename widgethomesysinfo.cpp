@@ -94,7 +94,7 @@ void WidgetHomeSysInfo::initLayout()
 
 }
 
-void WidgetHomeSysInfo::paintEvent(QPaintEvent* event)
+void WidgetHomeSysInfo::paintEvent(QPaintEvent* /*event*/)
 {
 
 }

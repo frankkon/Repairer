@@ -31,6 +31,10 @@ public slots:
     void showMainMenu();
     void iconIsActived(QSystemTrayIcon::ActivationReason reason);
 
+    // BEGIN: Added by kongjun, 2017/7/8 
+    void onCloseApp();
+    // END:   Added by kongjun, 2017/7/8 
+    
 private:
     WidgetTop*        m_pWidgetTop;
     WidgetLeft*       m_pWidgetLeft;

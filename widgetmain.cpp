@@ -154,3 +154,29 @@ void WidgetMain::init()
     m_pWidgetSystemScan->init();
     m_pWidgetFileRepair->init();
 }
+
+// BEGIN: Added by kongjun, 2017/7/8 
+//解决直接close,程序报runtime error, thread still running问题。
+//---------------------------------------------------------
+// 函 数 名  : WidgetMain::onCloseApp
+// 功能描述  : 退出程序
+// 输入参数  : 无
+// 输出参数  : 无
+// 返 回 值  : void
+//---------------------------------------------------------
+void WidgetMain::onCloseApp()
+{
+    //解决程序退出后系统托盘不消失问题
+    if(NULL != m_pTray)
+    {
+        delete m_pTray;
+        m_pTray = NULL;
+    }
+    
+    exit(0);
+}
+// END:   Added by kongjun, 2017/7/8 
+
+
+
+

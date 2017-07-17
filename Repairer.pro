@@ -6,6 +6,7 @@
 
 QT       += core gui
 QT       += network
+QT       += sql
 
 LIBS += -lshell32
 LIBS += -lversion
@@ -49,7 +50,9 @@ SOURCES += main.cpp\
     widgetunregister.cpp \
     widgetdiskclean.cpp \
     objdiskclean.cpp \
-    cleanitem.cpp
+    cleanitem.cpp \
+    cdiskscanconfig.cpp \
+    cwin10x86diskscanconfig.cpp
 
 HEADERS  += \
     widgetfilerepair.h \
@@ -78,7 +81,9 @@ HEADERS  += \
     widgetunregister.h \
     widgetdiskclean.h \
     objdiskclean.h \
-    cleanitem.h
+    cleanitem.h \
+    cdiskscanconfig.h \
+    cwin10x86diskscanconfig.h
 
 RESOURCES += \
     Res.qrc

@@ -175,12 +175,12 @@ void ObjSystemScan::CheckSystemFile()
 
         int nTmp = i * 100 / nCount;
         //if(nPercent != nTmp or bFirst or nTmp==(nCount-1))
-        {
+        //{
             emit(sigCurrentCheckFile(strCurFile, nCount, i));
             bFirst = false;
             qDebug() << "check lost file" << QThread::currentThreadId();
             nPercent = nTmp;
-        }
+        //}
 
 
         if(!Tool::isFileOrDirExist(strCurFile))
@@ -199,7 +199,7 @@ void ObjSystemScan::CheckSystemFile()
     m_bChecked = true;
 }
 
-void ObjSystemScan::deleteFromTable(int nIndex)
+void ObjSystemScan::deleteFromTable(int /*nIndex*/)
 {
     //    FileListItem* pItem = m_lstFileLost.at(nIndex);
     //    m_lstFileLost.removeAt(nIndex);
@@ -207,7 +207,7 @@ void ObjSystemScan::deleteFromTable(int nIndex)
     //    pItem = NULL;
 }
 
-FileListItem* ObjSystemScan::GetLostFileFromList(int nIndex)
+FileListItem* ObjSystemScan::GetLostFileFromList(int /*nIndex*/)
 {
     return NULL;
     //return m_lstFileLost.at(nIndex);

@@ -42,6 +42,9 @@ public:
     static void saveIniData(QString strKey, QString strValue);
     static QString readIniData(QString strKey);
 
+    // ***BEGIN*** kongjun 2017/7/15 add
+    static int getWindowsVersionInfo();
+    // ***END*** kongjun 2017/7/15 add
 
 private:
     static bool isKeyUnregistered(QString strKey);

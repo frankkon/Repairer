@@ -537,7 +537,7 @@ void WidgetSystemScan::downloadFinished(FileListItem* pItem, bool bSuccess)
     }
 }
 
-void WidgetSystemScan::paintEvent(QPaintEvent* event)
+void WidgetSystemScan::paintEvent(QPaintEvent* /*event*/)
 {
     //上部分位图
     QRect rctPic;
@@ -574,3 +574,7 @@ void WidgetSystemScan::clearLostFile()
     ui->treeWidget->clear();
     m_pObjSysScan->clearLostFile();
 }
+
+
+
+
