@@ -1,3 +1,5 @@
+-- 数据库文件名称：repairer.db
+
 create database repairer_db;
 
 create table disk_scan_info
