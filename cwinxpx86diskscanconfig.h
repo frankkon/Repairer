@@ -1,16 +1,17 @@
-#ifndef CWIN10X86DISKSCANCONFIG_H
-#define CWIN10X86DISKSCANCONFIG_H
+#ifndef CWINXPX86DISKSCANCONFIG_H
+#define CWINXPX86DISKSCANCONFIG_H
 
 #include "cdiskscanconfig.h"
 
-class CWin10X86DiskScanConfig : public CDiskScanConfig
+
+class CWinXpX86DiskScanConfig : public CDiskScanConfig
 {
 public:
-    CWin10X86DiskScanConfig();
+    CWinXpX86DiskScanConfig();
 
     //返回需要扫描的目录信息列表
     virtual QList<TDiskScanInfo*>* getDiskScanInfo();
     virtual QList<TRegScanInfo*>* getRegScanInfo();
 };
 
-#endif // CWIN10X86DISKSCANCONFIG_H
+#endif // CWINXPX86DISKSCANCONFIG_H

@@ -12,42 +12,10 @@
 ObjDiskClean::ObjDiskClean(QObject* parent) :
     QObject(parent),
     m_iTotalScanedFiles(0),
+    m_dTotalScanedFileSize(0),
     m_iTotalScanedRegs(0)
 {
-    m_pDiskScanConfig = CDiskScanConfig::loadConfig();
-//    //m_lstTrashFileSuffix.push_back("*.~*");
-//    m_lstTrashFileSuffix.push_back("ALT");
-//    m_lstTrashFileSuffix.push_back("FIX");
-//    m_lstTrashFileSuffix.push_back("PRV");
-//    m_lstTrashFileSuffix.push_back("SYD");
-//    m_lstTrashFileSuffix.push_back("$$$");
-//    m_lstTrashFileSuffix.push_back("CLN");
-//    m_lstTrashFileSuffix.push_back("GID");
-//    //m_lstTrashFileSuffix.push_back("SAV");
-//    m_lstTrashFileSuffix.push_back("tmp");
-//    //m_lstTrashFileSuffix.push_back("*.?~?");
-//    m_lstTrashFileSuffix.push_back("CYP");
-//    m_lstTrashFileSuffix.push_back("LOO");
-//    m_lstTrashFileSuffix.push_back("SCO");
-//    m_lstTrashFileSuffix.push_back("UMB");
-//    //m_lstTrashFileSuffix.push_back("*.B?K");
-//    m_lstTrashFileSuffix.push_back("ERR");
-//    //m_lstTrashFileSuffix.push_back("*.B?K");
-//    m_lstTrashFileSuffix.push_back("OLD");
-//    //m_lstTrashFileSuffix.push_back("*.B?K");
-//    m_lstTrashFileSuffix.push_back("SLK");
-//    m_lstTrashFileSuffix.push_back("UBK");
-//    //m_lstTrashFileSuffix.push_back("00?");
-//    m_lstTrashFileSuffix.push_back("ffa");
-//    m_lstTrashFileSuffix.push_back("ffo");
-//    m_lstTrashFileSuffix.push_back("ffl");
-//    m_lstTrashFileSuffix.push_back("T");
-//    m_lstTrashFileSuffix.push_back("ffx");
-//    m_lstTrashFileSuffix.push_back("exe");
-//
-//    m_lstNeedToBeCleanedFiles.push_back("desktop.ini");
-//    m_lstNeedToBeCleanedFiles.push_back("folder.htt");
-    
+    m_pDiskScanConfig = CDiskScanConfig::loadConfig();    
 }
 
 ObjDiskClean::~ObjDiskClean()
@@ -70,7 +38,8 @@ void ObjDiskClean::scanAllErrors()
     scanAllRegErrors();
 
     //完成所有扫描后通知UI
-    emit sigNotifyUIScanFinished(m_iTotalScanedFiles, m_iTotalScanedRegs);
+    emit sigNotifyUIScanFinished(m_iTotalScanedFiles,
+                                 m_dTotalScanedFileSize, m_iTotalScanedRegs);
 }
 
 //清理所有注册表错误和磁盘垃圾
@@ -89,7 +58,7 @@ void ObjDiskClean::scanAllTrashFiles()
 {
     qDebug() << "扫描所有磁盘垃圾:scanAllTrashFiles()";
 
-    //获取需要扫描的路径信息列表
+    //获取需要扫描的路径信息
     QList<TDiskScanInfo*>* pList = m_pDiskScanConfig->getDiskScanInfo();
     if(NULL != pList)
     {
@@ -103,19 +72,70 @@ void ObjDiskClean::scanAllTrashFiles()
 
 void ObjDiskClean::scanAllRegErrors()
 {
-    m_iTotalScanedRegs = 1000;
+    qDebug() << "扫描所有注册表错误:scanAllRegErrors()";
+
+    //获取需要扫描的注册表路径
+    QList<TRegScanInfo*>* pList = m_pDiskScanConfig->getRegScanInfo();
+    if(NULL != pList)
+    {
+        QListIterator<TRegScanInfo*> it(*pList);
+        while(it.hasNext())
+        {
+            scanRegInPath(it.next());
+        }
+    }
 }
 
 void ObjDiskClean::cleanAllTrashFiles()
 {
+    QList<TDiskScanInfo*>* pList = m_pDiskScanConfig->getDiskScanInfo();
+    if(NULL != pList)
+    {
+        QListIterator<TDiskScanInfo*> it(*pList);
+        while(it.hasNext())
+        {
+            TDiskScanInfo* pScanInfo = it.next();
+            QStringList fileList = pScanInfo->file_list;
+            foreach(QString file, fileList)
+            {
+                QFile sPath(file);
+                if(sPath.exists())
+                {
+                    sPath.remove();
+                }
+
+                emit sigNotifyUIUpdateCleanProgress(fileList.count(),
+                                                    pScanInfo->desc_en,
+                                                    file);
+            }
+        }
+    }
 
 }
 
 void ObjDiskClean::cleanAllRegErrors()
 {
-
+    QList<TRegScanInfo*>* pList = m_pDiskScanConfig->getRegScanInfo();
+    if(NULL != pList)
+    {
+        QListIterator<TRegScanInfo*> it(*pList);
+        while(it.hasNext())
+        {
+            TRegScanInfo* pScanInfo = it.next();
+            QSettings reg(pScanInfo->reg_path);
+            QStringList keyList = pScanInfo->err_list;
+            foreach(QString key, keyList)
+            {
+                reg.remove(key);
+                emit sigNotifyUIUpdateCleanProgress(keyList.count(),
+                                                    pScanInfo->desc_en,
+                                                    pScanInfo->reg_path + key);
+            }
+        }
+    }
 }
 
+//扫描指定的磁盘目录
 void ObjDiskClean::scanTrashFilesInPath(TDiskScanInfo* scanInfo)
 {
     qDebug() << "清理指定目录的磁盘垃圾:scanTrashFilesInPath()";
@@ -124,7 +144,7 @@ void ObjDiskClean::scanTrashFilesInPath(TDiskScanInfo* scanInfo)
 
     scanInfo->total_size = 0;
     scanInfo->file_count = 0;
-    scanInfo->fileList.clear();
+    scanInfo->file_list.clear();
 
     //不用递归，构建一个目录扫描列表进行遍历
     QStringList scanDirList;
@@ -146,11 +166,14 @@ void ObjDiskClean::scanTrashFilesInPath(TDiskScanInfo* scanInfo)
         {
             continue;
         }
-        scanDir.setFilter(QDir::Dirs|QDir::Files|QDir::NoSymLinks|QDir::NoDotAndDotDot|QDir::Hidden|QDir::System);
-//        if(scanDir.isEmpty())
-//        {
-//            continue;
-//        }
+        scanDir.setFilter(QDir::Dirs|QDir::Files|QDir::NoSymLinks
+                          |QDir::NoDotAndDotDot|QDir::Hidden|QDir::System);
+
+        //不能判空
+        //if(scanDir.isEmpty())
+        //{
+        //    continue;
+        //}
 
         //目录时按照文件通配符筛选垃圾文件
         if(0 == scanInfo->clean_all_flag)
@@ -159,6 +182,7 @@ void ObjDiskClean::scanTrashFilesInPath(TDiskScanInfo* scanInfo)
             scanDir.setNameFilters(extNameList);
         }
 
+        //遍历当前目录
         scanDirFiles = scanDir.entryInfoList();
         QListIterator<QFileInfo> itFile(scanDirFiles);
         while(itFile.hasNext())
@@ -166,239 +190,383 @@ void ObjDiskClean::scanTrashFilesInPath(TDiskScanInfo* scanInfo)
             fileInfo = itFile.next();
             if(fileInfo.isFile())
             {
-                scanInfo->total_size += fileInfo.size()/1024/1024; //转换成MB
+                scanInfo->total_size += (double)fileInfo.size()/1024/1024; //转换成MB
                 scanInfo->file_count++;
                 m_iTotalScanedFiles++;
-                scanInfo->fileList.append(fileInfo.filePath());
-                emit sigNotifyUIUpdateScanProgress(scanDir.count(), scanInfo->desc_en, fileInfo.filePath());
+                scanInfo->file_list.append(fileInfo.filePath());
+                emit sigNotifyUIUpdateScanProgress(scanDir.count(),
+                                                   scanInfo->desc_en,
+                                                   fileInfo.filePath());
             }
             else
             {
-                //如果时目录，就继续加到待扫描的目录列表中
+                //如果是目录，就继续加到待扫描的目录列表中
                 scanDirList.append(fileInfo.filePath());
             }
         }
     }
+
+    //扫描完成后，总计垃圾文件大小
+    m_dTotalScanedFileSize += scanInfo->total_size;
+
 }
 
+//替换路径中的环境遍历
 void ObjDiskClean::replaceEnv(QString& srcDir)
 {
+    //只能处理只有一个环境变量的情况
+
     if(srcDir.contains("%"))
     {
         int begin = srcDir.indexOf("%");
         int end = srcDir.lastIndexOf("%");
         QString env = srcDir.mid(begin + 1, end - begin - 1);
-        //qDebug() << QProcessEnvironment::systemEnvironment().toStringList();
         QString path = QProcessEnvironment::systemEnvironment().value(env);
         srcDir.replace(begin, (end - begin + 1), path);
     }
 }
 
+//扫描指定的注册表路径
+void ObjDiskClean::scanRegInPath(TRegScanInfo* scanInfo)
+{
+    qDebug() << "扫描指定的注册表路径:scanRegInPath()";
+    qDebug() << "正在扫描" << scanInfo->desc_cn;
+    qDebug() << scanInfo->reg_path;
+
+    switch (scanInfo->err_type)
+    {
+        case DLL_ERROR:
+        {
+            scanRegByDllErrors(scanInfo);
+            break;
+        }
+        case APP_COMPAT:
+        {
+            scanRegByAppCompat(scanInfo);
+            break;
+        }
+        case INVALID_STARTUP:
+        {
+            scanRegByInvalidStartup(scanInfo);
+            break;
+        }
+        case RESIDUAL_UNINSTALL:
+        {
+            scanRegByResidualUninstall(scanInfo);
+            break;
+        }
+        case WRONG_HELP:
+        {
+            scanRegByWrongHelp(scanInfo);
+            break;
+        }
+        case APP_INSTALL:
+        {
+            scanRegByAppInstall(scanInfo);
+            break;
+        }
+        case APP_PATH:
+        {
+            scanRegByAppPath(scanInfo);
+            break;
+        }
+        case RESIDUAL_INSTALL:
+        {
+            scanRegByResidualInstall(scanInfo);
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+}
+
+void ObjDiskClean::scanRegByDllErrors(TRegScanInfo* scanInfo)
+{
+    //这里要用windows API 读取注册表，QSettings不支持读取带有反斜杠(\)的键的值。
+
+    QString regPath = scanInfo->reg_path;
+
+    //Registry64Format保证兼容32位和64位系统
+    QSettings reg(regPath, QSettings::Registry64Format);
+
+    DWORD dw = 0;
+    DWORD sdw = sizeof(dw);
+    HKEY hkResult = NULL;
+    LONG rt = 0;
+    int idx = 0;
+    QString sLeft;
+    QString sRight;
+    idx = regPath.indexOf('\\');
+    sLeft = regPath.left(idx);
+    sRight = regPath.mid(idx + 1);
+    HKEY hkPrimary = getPrimaryKeyHandle(sLeft);
+    rt = ::RegOpenKeyEx(hkPrimary, (LPCWSTR)sRight.constData(), 0,
+                        KEY_ALL_ACCESS|KEY_WOW64_64KEY, &hkResult);
+    if(ERROR_SUCCESS != rt)
+    {
+        return;
+    }
+
+    QString sOrginKey;
+    QStringList keyList = reg.childKeys();
+    int keyCount = keyList.count();
+    foreach(QString key, keyList)
+    {
+        //在替换反斜杠之前先保存下来
+        sOrginKey = key;
+        key = key.replace("/","\\");
+        ::RegGetValue(hkResult, NULL, (PCWSTR)key.constData(),
+                      RRF_RT_DWORD, NULL, &dw, &sdw);
+
+        //如果引用计数为0，则需要删除
+        if(0 == dw)
+        {
+            scanInfo->err_list.append(sOrginKey);
+            m_iTotalScanedRegs++;
+        }
+        emit sigNotifyUIUpdateScanProgress(keyCount, scanInfo->desc_en, key);
+    }
+
+    ::RegCloseKey(hkResult);
+}
+
+void ObjDiskClean::scanRegByAppCompat(TRegScanInfo* scanInfo)
+{
+    //Registry64Format保证兼容32位和64位系统
+    QSettings reg(scanInfo->reg_path, QSettings::Registry64Format);
+
+    QStringList keyList = reg.childKeys();
+    int keyCount = keyList.count();
+    foreach(QString key, keyList)
+    {
+        //没有路径标识的键值不确定，暂不处理
+        if(!key.contains("/"))
+        {
+            continue;
+        }
+
+        QFile file(key);
+
+        //如果文件不存在，则需要删除
+        if(!file.exists())
+        {
+            scanInfo->err_list.append(key);
+            m_iTotalScanedRegs++;
+        }
+        emit sigNotifyUIUpdateScanProgress(keyCount, scanInfo->desc_en, key);
+    }
+}
+
+void ObjDiskClean::scanRegByInvalidStartup(TRegScanInfo* scanInfo)
+{
+    //Registry64Format保证兼容32位和64位系统
+    QSettings reg(scanInfo->reg_path, QSettings::Registry64Format);
+
+    QStringList keyList = reg.childKeys();
+    int keyCount = keyList.count();
+    foreach(QString key, keyList)
+    {
+        QString value = reg.value(key).toString();
+        value = value.replace("\"", "");
+        int idx = value.indexOf(".exe", 0, Qt::CaseInsensitive);
+        if(idx < 0) //没有.exe的情况比较复杂，不处理
+        {
+            continue;
+        }
+
+        QString sLeft = value.left(idx + 4);
+        replaceEnv(sLeft);  //有些值的目录里面有环境变量。
+
+        QFile file(sLeft);
+        if(!file.exists())  //如果文件不存在，则需要删除
+        {
+            scanInfo->err_list.append(key);
+            m_iTotalScanedRegs++;
+        }
+        emit sigNotifyUIUpdateScanProgress(keyCount, scanInfo->desc_en, key);
+    }
+}
+
+void ObjDiskClean::scanRegByResidualUninstall(TRegScanInfo* scanInfo)
+{
+    //group里面没有键，将group加入待删除列表
+    //UninstallString对应的执行文件不存在的，将group加入待删除列表
+    //通过MsiExec.exe或者RunDll32卸载的不处理
+    //其他情况的不处理。
+
+    QSettings reg(scanInfo->reg_path, QSettings::Registry64Format);
+    QStringList groupList = reg.childGroups();
+    int groupCount = groupList.count();
+    foreach(QString group, groupList)
+    {
+        reg.beginGroup(group);
+        QStringList lstchildKeys = reg.childKeys();
+        if(lstchildKeys.empty())
+        {
+            scanInfo->err_list.append(group);
+            m_iTotalScanedRegs++;
+            reg.endGroup();
+            continue;
+        }
+
+        if(lstchildKeys.contains("UninstallString"))
+        {
+            QString value = reg.value("UninstallString").toString();
+            if(value.contains("MsiExec.exe", Qt::CaseInsensitive)
+                    || value.contains("RunDll32", Qt::CaseInsensitive))
+            {
+                reg.endGroup();
+                continue;
+            }
+
+            value.replace("\"", ""); //有些路径包含双引号，先去掉
+            int idx = value.indexOf(".exe", 0, Qt::CaseInsensitive);
+            if(-1 != idx)
+            {
+                QString sLeft = value.left(idx + 4);
+                replaceEnv(sLeft);  //有些值的目录里面有环境变量。
+
+                QFile file(sLeft);
+                if(!file.exists())  //如果文件不存在，则需要删除
+                {
+                    scanInfo->err_list.append(group);
+                    m_iTotalScanedRegs++;
+                }
+            }
+        }
+
+        reg.endGroup();
+        emit sigNotifyUIUpdateScanProgress(groupCount, scanInfo->desc_en, group);
+    }
+}
+
+void ObjDiskClean::scanRegByWrongHelp(TRegScanInfo* scanInfo)
+{
+    //Registry64Format保证兼容32位和64位系统
+    QSettings reg(scanInfo->reg_path, QSettings::Registry64Format);
+
+    QStringList keyList = reg.childKeys();
+    int keyCount = keyList.count();
+    foreach(QString key, keyList)
+    {
+        QString value = reg.value(key).toString();
+        value = value + "/" + key;
+        replaceEnv(value);  //有些值的目录里面有环境变量。
+
+        QFile file(value);
+        if(!file.exists())  //如果文件不存在，则需要删除
+        {
+            scanInfo->err_list.append(key);
+            m_iTotalScanedRegs++;
+        }
+        emit sigNotifyUIUpdateScanProgress(keyCount, scanInfo->desc_en, key);
+    }
+}
+
+void ObjDiskClean::scanRegByAppInstall(TRegScanInfo* scanInfo)
+{
+    //Registry64Format保证兼容32位和64位系统
+    QSettings reg(scanInfo->reg_path, QSettings::Registry64Format);
+
+    QStringList keyList = reg.childKeys();
+    int keyCount = keyList.count();
+    foreach(QString key, keyList)
+    {
+        QString path = key;
+        replaceEnv(path);  //有些值的目录里面有环境变量。
+
+        QDir dir(path);
+        if(!dir.exists())  //如果文件不存在，则需要删除
+        {
+            scanInfo->err_list.append(key);
+            m_iTotalScanedRegs++;
+        }
+        emit sigNotifyUIUpdateScanProgress(keyCount, scanInfo->desc_en, key);
+    }
+}
+
+void ObjDiskClean::scanRegByAppPath(TRegScanInfo* /*scanInfo*/)
+{
+    //检查逻辑不确定，没有统一的规律，检查默认键的值不对。
+}
+
+void ObjDiskClean::scanRegByResidualInstall(TRegScanInfo* scanInfo)
+{
+    //Registry64Format保证兼容32位和64位系统
+    QSettings reg(scanInfo->reg_path, QSettings::Registry64Format);
+
+    QStringList groupList = reg.childGroups();
+    int groupCount = groupList.count();
+    foreach(QString group, groupList)
+    {
+        //Policies这个目录比较特别，防止有问题，忽略
+        //这里先硬编码，如果类似目录比较多，后续做成白名单。
+        if(group.contains("Policies", Qt::CaseInsensitive))
+        {
+            continue;
+        }
+
+        reg.beginGroup(group);
+
+        QStringList lstKeys = reg.allKeys();
+        if(lstKeys.empty())
+        {
+            scanInfo->err_list.append(group);
+            m_iTotalScanedRegs++;
+        }
+
+        reg.endGroup();
+        emit sigNotifyUIUpdateScanProgress(groupCount, scanInfo->desc_en, group);
+    }
+}
+
+HKEY ObjDiskClean::getPrimaryKeyHandle(QString sKey)
+{
+    if("HKEY_CURRENT_USER" == sKey)
+    {
+        return HKEY_CURRENT_USER;
+    }
+    else if("HKEY_LOCAL_MACHINE" == sKey)
+    {
+        return HKEY_LOCAL_MACHINE;
+    }
+    else if("HKEY_USERS" == sKey)
+    {
+        return HKEY_USERS;
+    }
+    else if("HKEY_CLASSES_ROOT" == sKey)
+    {
+        return HKEY_CLASSES_ROOT;
+    }
+    else if("HKEY_CURRENT_CONFIG" == sKey)
+    {
+        return HKEY_CURRENT_CONFIG;
+    }
+    else if("HKEY_DYN_DATA" == sKey)
+    {
+        return HKEY_DYN_DATA;
+    }
+    else if("HKEY_PERFORMANCE_DATA" == sKey)
+    {
+        return HKEY_PERFORMANCE_DATA;
+    }
+    else if("HKEY_PERFORMANCE_NLSTEXT" == sKey)
+    {
+        return HKEY_PERFORMANCE_NLSTEXT;
+    }
+    else if("HKEY_PERFORMANCE_TEXT" == sKey)
+    {
+        return HKEY_PERFORMANCE_TEXT;
+    }
+    else
+    {
+        return 0;
+    }
+}
 
 
-//void ObjDiskClean::clean()
-//{
-//    clearAllItems();
-//
-//    UINT typeDev = 0;
-//    wchar_t ch[4] = { 'X', ':', '\\', '\0' };
-//    for(wchar_t c = 'A'; c <= 'Z'; c++)
-//    {
-//        ch[0] = c;
-//        typeDev = ::GetDriveType(ch);
-//        if(typeDev == DRIVE_FIXED)
-//        {
-//            QString strDev = QString::fromWCharArray(ch);
-//            qDebug() << "分区：" << strDev << "开始清理";
-//
-//            findFiles(strDev);
-//        }
-//    }
-//
-//    //测试文件夹
-//    //findFiles("C:\\test");
-//
-//    for(QList<CleanItem*>::iterator it = m_lstNeedToBeCleanedItems.begin(); it != m_lstNeedToBeCleanedItems.end(); it++)
-//    {
-//        qDebug() << "name:" << (*it)->m_strName << "  size:" << (*it)->m_nTotalSizeKb;
-//        for(QList<CleanItem*>::iterator it2 = (*it)->m_lstChild.begin(); it2 != (*it)->m_lstChild.end(); it2++)
-//        {
-//            qDebug() << (*it2)->m_strFilePath;
-//        }
-//    }
-//
-//    emit(sigCleanFinish());
-//}
-//
-//void ObjDiskClean::findFiles(QString strPath)
-//{
-//    QDir dir(strPath);
-//
-//    if(!dir.exists())
-//    { return; }
-//
-//    dir.setFilter(QDir::Dirs | QDir::Files);
-//
-//    dir.setSorting(QDir::DirsFirst);
-//
-//    QFileInfoList list = dir.entryInfoList();
-//
-//    int i = 0;
-//
-//    bool bIsDir;
-//
-//    do
-//    {
-//        QFileInfo fileInfo = list.at(i);
-//
-//        if(fileInfo.fileName() == "." || fileInfo.fileName() == "..")
-//        {
-//            i++;
-//            continue;
-//        }
-//
-//        bIsDir = fileInfo.isDir();
-//
-//        if(bIsDir)
-//        {
-//            //fileInfo.size(),fileInfo.fileName(),fileInfo.path()
-//
-//            findFiles(fileInfo.filePath());
-//        }
-//        else
-//        {
-//            //qDebug()<<"find file:"<<fileInfo.fileName();
-//
-//            QString strTmp = fileInfo.absoluteFilePath();
-//            procFile(strTmp);
-//        }
-//        i++;
-//    }
-//    while(i < list.size());
-//}
-//
-//void ObjDiskClean::addCleanSuffix(QString strSuffix)
-//{
-//    if(m_lstTrashFileSuffix.indexOf(strSuffix.toLower()) != -1)
-//    {
-//        m_lstTrashFileSuffix.push_back(strSuffix.toLower());
-//    }
-//}
-//
-//void ObjDiskClean::removeCleanSuffix(QString strSuffix)
-//{
-//    int iIndex = m_lstTrashFileSuffix.indexOf(strSuffix.toLower());
-//    if(iIndex != -1)
-//    {
-//        m_lstTrashFileSuffix.removeAt(iIndex);
-//    }
-//}
-//
-//void ObjDiskClean::addCleanFile(QString strFile)
-//{
-//    int iIndex = m_lstNeedToBeCleanedFiles.indexOf(strFile);
-//    if(iIndex != -1)
-//    {
-//        m_lstNeedToBeCleanedFiles.push_back(strFile);
-//    }
-//}
-//
-//void ObjDiskClean::removeCleanFile(QString strFile)
-//{
-//    int iIndex = m_lstNeedToBeCleanedFiles.indexOf(strFile);
-//    if(-1 != iIndex)
-//    {
-//        m_lstNeedToBeCleanedFiles.removeAt(iIndex);
-//    }
-//}
-//
-//void ObjDiskClean::procFile(QString strFilePath)
-//{
-//    bool bClean = false;
-//    CleanItem* pItem = NULL;
-//    QString strCheckSuffix = Tool::getFileSuffix(strFilePath);
-//    QString strCheckName = Tool::getFileName(strFilePath);
-//
-//    for(QList<QString>::iterator it = m_lstTrashFileSuffix.begin(); it != m_lstTrashFileSuffix.end(); it++)
-//    {
-//        qDebug() << "当前检查的后缀" << *it;
-//        qDebug() << "当前文件的后缀" << strCheckSuffix;
-//        if(*it == strCheckSuffix)
-//        {
-//            //该文件后缀已经在列表中，添加到其子列表中
-//            pItem = addCleanItem(0, strCheckSuffix, strFilePath);
-//            bClean = true;
-//            break;
-//        }
-//    }
-//
-//    for(QList<QString>::iterator it = m_lstNeedToBeCleanedFiles.begin(); it != m_lstNeedToBeCleanedFiles.end(); it++)
-//    {
-//        if(*it == strCheckName)
-//        {
-//            pItem = addCleanItem(1, strCheckName, strFilePath);
-//            bClean = true;
-//            break;
-//        }
-//    }
-//
-//    emit(sigUpdateCurrentCheckFile(bClean, strFilePath, pItem));
-//}
-//
-//CleanItem* ObjDiskClean::addCleanItem(int nType, QString strName, QString strFilePath)
-//{
-//    CleanItem* pItemRtn = NULL;
-//    BOOL bExist = FALSE;
-//
-//    for(QList<CleanItem*>::iterator it = m_lstNeedToBeCleanedItems.begin(); it != m_lstNeedToBeCleanedItems.end(); it++)
-//    {
-//        CleanItem* pItem = *it;
-//        if((pItem->m_nType == nType) && (pItem->m_strName == strName))
-//        {
-//            bExist = TRUE;
-//            CleanItem* pItemNew = new CleanItem();
-//            pItemNew->m_nType = nType;
-//            pItemNew->m_strName = strName;
-//            pItemNew->m_strFilePath = strFilePath;
-//            pItemNew->m_nTotalSizeKb = Tool::getFileSize(strFilePath);
-//
-//            pItem->m_lstChild.push_back(pItem);
-//            pItem->m_nTotalSizeKb += pItemNew->m_nTotalSizeKb;
-//
-//            pItemRtn = pItemNew;
-//
-//            break;
-//        }
-//    }
-//
-//    if(!bExist)
-//    {
-//        CleanItem* pItemChild = new CleanItem();
-//        pItemChild->m_nType = 1;
-//        pItemChild->m_strName = strName;
-//        pItemChild->m_strFilePath = strFilePath;
-//        pItemChild->m_nTotalSizeKb = Tool::getFileSize(strFilePath);
-//
-//        CleanItem* pItemNew = new CleanItem();
-//        pItemNew->m_nType = 0;
-//        pItemNew->m_strName = strName;
-//        pItemNew->m_nTotalSizeKb = pItemChild->m_nTotalSizeKb;
-//        pItemNew->m_lstChild.push_back(pItemChild);
-//
-//        m_lstNeedToBeCleanedItems.push_back(pItemNew);
-//
-//        pItemRtn = pItemChild;
-//    }
-//}
-//
-//void ObjDiskClean::clearAllItems()
-//{
-//    for(QList<CleanItem*>::iterator it = m_lstNeedToBeCleanedItems.begin(); it != m_lstNeedToBeCleanedItems.end(); it++)
-//    {
-//        CleanItem* pTmp = *it;
-//        delete pTmp;
-//        pTmp = NULL;
-//    }
-//    m_lstNeedToBeCleanedItems.clear();
-//}
+
+
 

@@ -1,5 +1,4 @@
 create database repairer_db;
-using repairer_db;
 
 create table disk_scan_info
 (
@@ -21,6 +20,7 @@ create table reg_scan_info
     platform_id            integer,           --windows°æ±¾ID
     platform_name          varchar(20),       --windows°æ±¾ÃèÊö
     platform_cpu           integer,           --0:x86;1:x64
+    err_type               integer,           --´íÎóÀàĞÍ£¬²»Í¬µÄÀàĞÍ²»Í¬µÄ´¦Àí·½Ê½
     desc_cn                varchar(256),      --×¢²á±í´íÎóÀàĞÍÖĞÎÄÃèÊö
     desc_en                varchar(256),      --×¢²á±í´íÎóÀàĞÍÓ¢ÎÄÃèÊö
     reg_path               varchar(1024),     --×¢²á±í´íÎóµÄ¾ø¶ÔÂ·¾¶
@@ -64,12 +64,12 @@ insert into disk_scan_info values(6350, 63, "Windows_81_x64", 1, "WindowsÏµÍ³ÁÙÊ
 insert into disk_scan_info values(10000, 100, "Windows_10_x86", 0, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%UserProfile%\AppData\Local\Temp","", 1);
 insert into disk_scan_info values(10001, 100, "Windows_10_x86", 0, "Windows InstallerÁÙÊ±ÎÄ¼ş", "Windows Installer Temp Files", "C:\Windows\Installer\$PatchCache$\Managed","", 1);
 
-insert into disk_scan_info values(10003, 100, "Windows_10_x86", 0, "Î¢ÈíDefenderÉ¨ÃèÀúÊ·", "Microsoft Defender Scan History", "C:\ProgramData\Microsoft\Windows Defender\Support",".log;.bin", 0);
-insert into disk_scan_info values(10004, 100, "Windows_10_x86", 0, "Î¢ÈíDefenderÉ¨ÃèÀúÊ·", "Microsoft Defender Scan History", "C:\ProgramData\Microsoft\Windows Defender\Scans",".bin", 0);
+insert into disk_scan_info values(10003, 100, "Windows_10_x86", 0, "Î¢ÈíDefenderÉ¨ÃèÀúÊ·", "Microsoft Defender Scan History", "C:\ProgramData\Microsoft\Windows Defender\Support","*.log;*.bin", 0);
+insert into disk_scan_info values(10004, 100, "Windows_10_x86", 0, "Î¢ÈíDefenderÉ¨ÃèÀúÊ·", "Microsoft Defender Scan History", "C:\ProgramData\Microsoft\Windows Defender\Scans","*.bin*", 0);
 insert into disk_scan_info values(10005, 100, "Windows_10_x86", 0, "Î¢ÈíDefenderÉ¨ÃèÀúÊ·", "Microsoft Defender Scan History", "C:\ProgramData\Microsoft\Windows Defender\Scans\History\Results\Resource","", 1);
-insert into disk_scan_info values(10006, 100, "Windows_10_x86", 0, "Î¢ÈíDefenderÉ¨ÃèÀúÊ·", "Microsoft Defender Scan History", "C:\Documents and Settings\All Users\Application Data\Microsoft\Windows Defender\Scans\History\CacheManager",".bin", 0);
+insert into disk_scan_info values(10006, 100, "Windows_10_x86", 0, "Î¢ÈíDefenderÉ¨ÃèÀúÊ·", "Microsoft Defender Scan History", "C:\Documents and Settings\All Users\Application Data\Microsoft\Windows Defender\Scans\History\CacheManager","*.bin", 0);
 insert into disk_scan_info values(10007, 100, "Windows_10_x86", 0, "Î¢ÈíDefenderÉ¨ÃèÀúÊ·", "Microsoft Defender Scan History", "C:\ProgramData\Application Data\Microsoft\Windows Defender\Definition Updates\Backup","", 1);
-insert into disk_scan_info values(10008, 100, "Windows_10_x86", 0, "Î¢ÈíDefenderÉ¨ÃèÀúÊ·", "Microsoft Defender Scan History", "C:\Documents and Settings\All Users\Application Data\Microsoft\Windows Defender\Scans",".bin", 0);
+insert into disk_scan_info values(10008, 100, "Windows_10_x86", 0, "Î¢ÈíDefenderÉ¨ÃèÀúÊ·", "Microsoft Defender Scan History", "C:\Documents and Settings\All Users\Application Data\Microsoft\Windows Defender\Scans","*.bin", 0);
 
 insert into disk_scan_info values(10009, 100, "Windows_10_x86", 0, "ÏµÍ³×Ô¶¯¸üĞÂÈÕÖ¾ÎÄ¼ş", "System Auto Update log", "C:\Windows\SoftwareDistribution\DataStore","", 1);
 
@@ -88,7 +88,7 @@ insert into disk_scan_info values(10018, 100, "Windows_10_x86", 0, "ÏµÍ³Í¼±ê»º´æ
 insert into disk_scan_info values(10019, 100, "Windows_10_x86", 0, "ÎŞĞ§¿ì½İ·½Ê½", "Invalid shortcut", "%UserProfile%\AppData\Roaming\Microsoft\Windows\Recent","", 1);
 
 insert into disk_scan_info values(10020, 100, "Windows_10_x86", 0, "¹È¸èä¯ÀÀÆ÷»º´æ", "Chrome Cache", "%UserProfile%\AppData\Local\Google\Chrome\User Data\Default\Cache","", 1);
-insert into disk_scan_info values(10021, 100, "Windows_10_x86", 0, "¹È¸èä¯ÀÀÆ÷ÈÕÖ¾", "Chrome Cache", "%UserProfile%\AppData\Local\Google\Chrome\User Data\Default\Session Storage","log", 0);
+insert into disk_scan_info values(10021, 100, "Windows_10_x86", 0, "¹È¸èä¯ÀÀÆ÷ÈÕÖ¾", "Chrome Cache", "%UserProfile%\AppData\Local\Google\Chrome\User Data\Default\Session Storage","*log*", 0);
 insert into disk_scan_info values(10022, 100, "Windows_10_x86", 0, "IEä¯ÀÀÆ÷»º´æ", "IE Cache", "%UserProfile%\AppData\Local\Microsoft\Windows\WebCache","", 1);
 insert into disk_scan_info values(10023, 100, "Windows_10_x86", 0, "IE10ÒÔÉÏä¯ÀÀÆ÷»º´æ", "IE 10 Cache", "%UserProfile%\AppData\Local\Microsoft\Windows\INetCache\IE","", 1);
 insert into disk_scan_info values(10024, 100, "Windows_10_x86", 0, "Edgeä¯ÀÀÆ÷»º´æ", "Edge Cache", "%UserProfile%\AppData\Local\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\AC\MicrosoftEdge\Cache","", 1);
@@ -102,100 +102,111 @@ insert into disk_scan_info values(10050, 100, "Windows_10_x64", 1, "WindowsÏµÍ³Á
 -- //reg_scan_info
 -- ///////////////////////////////////////////////////////////////////////////////////////////////
 -- windows xp x86
-insert into reg_scan_info values(5100, 51, "Windows_xp_x86", 0, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MEACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
-insert into reg_scan_info values(5101, 51, "Windows_xp_x86", 0, "´íÎóµÄÀàĞÅÏ¢", "Classes Errors", "HKEY_CLASSES_ROOT\CLSID");
-insert into reg_scan_info values(5102, 51, "Windows_xp_x86", 0, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(5103, 51, "Windows_xp_x86", 0, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(5104, 51, "Windows_xp_x86", 0, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
-insert into reg_scan_info values(5105, 51, "Windows_xp_x86", 0, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(5100, 51, "Windows_xp_x86", 0, 1, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
+insert into reg_scan_info values(5101, 51, "Windows_xp_x86", 0, 2, "³ÌĞò¼æÈİĞÔÑ¡ÏîĞÅÏ¢", "App Compat Flags", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers");
+insert into reg_scan_info values(5102, 51, "Windows_xp_x86", 0, 2, "³ÌĞò¼æÈİĞÔÑ¡ÏîĞÅÏ¢", "App Compat Flags", "HKEY_CURRENT_USER\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Persisted");
+insert into reg_scan_info values(5103, 51, "Windows_xp_x86", 0, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(5104, 51, "Windows_xp_x86", 0, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(5105, 51, "Windows_xp_x86", 0, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(5106, 51, "Windows_xp_x86", 0, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
 
 -- windows xp x64
-insert into reg_scan_info values(5250, 52, "Windows_xp_x64", 1, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MEACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
-insert into reg_scan_info values(5251, 52, "Windows_xp_x64", 1, "´íÎóµÄÀàĞÅÏ¢", "Classes Errors", "HKEY_CLASSES_ROOT\CLSID");
-insert into reg_scan_info values(5252, 52, "Windows_xp_x64", 1, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(5253, 52, "Windows_xp_x64", 1, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(5254, 52, "Windows_xp_x64", 1, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
-insert into reg_scan_info values(5255, 52, "Windows_xp_x64", 1, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(5250, 52, "Windows_xp_x64", 1, 1, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
+insert into reg_scan_info values(5251, 52, "Windows_xp_x64", 1, 2, "³ÌĞò¼æÈİĞÔÑ¡ÏîĞÅÏ¢", "App Compat Flags", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers");
+insert into reg_scan_info values(5252, 52, "Windows_xp_x64", 1, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(5253, 52, "Windows_xp_x64", 1, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(5254, 52, "Windows_xp_x64", 1, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(5255, 52, "Windows_xp_x64", 1, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
 
 -- windows vista x86
-insert into reg_scan_info values(6000, 60, "Windows_vista_x86", 0, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MEACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
-insert into reg_scan_info values(6001, 60, "Windows_vista_x86", 0, "´íÎóµÄÀàĞÅÏ¢", "Classes Errors", "HKEY_CLASSES_ROOT\CLSID");
-insert into reg_scan_info values(6002, 60, "Windows_vista_x86", 0, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(6003, 60, "Windows_vista_x86", 0, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(6004, 60, "Windows_vista_x86", 0, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
-insert into reg_scan_info values(6005, 60, "Windows_vista_x86", 0, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(6000, 60, "Windows_vista_x86", 0, 1, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
+insert into reg_scan_info values(6001, 60, "Windows_vista_x86", 0, 2, "³ÌĞò¼æÈİĞÔÑ¡ÏîĞÅÏ¢", "App Compat Flags", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers");
+insert into reg_scan_info values(6002, 60, "Windows_vista_x86", 0, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(6003, 60, "Windows_vista_x86", 0, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(6004, 60, "Windows_vista_x86", 0, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(6005, 60, "Windows_vista_x86", 0, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
 
 -- windows vista x64
-insert into reg_scan_info values(6050, 60, "Windows_vista_x64", 1, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MEACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
-insert into reg_scan_info values(6051, 60, "Windows_vista_x64", 1, "´íÎóµÄÀàĞÅÏ¢", "Classes Errors", "HKEY_CLASSES_ROOT\CLSID");
-insert into reg_scan_info values(6052, 60, "Windows_vista_x64", 1, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(6053, 60, "Windows_vista_x64", 1, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(6054, 60, "Windows_vista_x64", 1, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
-insert into reg_scan_info values(6055, 60, "Windows_vista_x64", 1, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(6050, 60, "Windows_vista_x64", 1, 1, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
+insert into reg_scan_info values(6051, 60, "Windows_vista_x64", 1, 2, "³ÌĞò¼æÈİĞÔÑ¡ÏîĞÅÏ¢", "App Compat Flags", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers");
+insert into reg_scan_info values(6052, 60, "Windows_vista_x64", 1, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(6053, 60, "Windows_vista_x64", 1, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(6054, 60, "Windows_vista_x64", 1, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(6055, 60, "Windows_vista_x64", 1, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
 
 -- windows 7 x86
-insert into reg_scan_info values(6100, 61, "Windows_7_x86", 0, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MEACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
-insert into reg_scan_info values(6101, 61, "Windows_7_x86", 0, "´íÎóµÄÀàĞÅÏ¢", "Classes Errors", "HKEY_CLASSES_ROOT\CLSID");
-insert into reg_scan_info values(6102, 61, "Windows_7_x86", 0, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(6103, 61, "Windows_7_x86", 0, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(6104, 61, "Windows_7_x86", 0, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
-insert into reg_scan_info values(6105, 61, "Windows_7_x86", 0, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(6100, 61, "Windows_7_x86", 0, 1, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
+insert into reg_scan_info values(6101, 61, "Windows_7_x86", 0, 2, "³ÌĞò¼æÈİĞÔÑ¡ÏîĞÅÏ¢", "App Compat Flags", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers");
+insert into reg_scan_info values(6102, 61, "Windows_7_x86", 0, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(6103, 61, "Windows_7_x86", 0, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(6104, 61, "Windows_7_x86", 0, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(6105, 61, "Windows_7_x86", 0, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
 
 -- windows 7 x64
-insert into reg_scan_info values(6150, 61, "Windows_7_x64", 1, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MEACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
-insert into reg_scan_info values(6151, 61, "Windows_7_x64", 1, "´íÎóµÄÀàĞÅÏ¢", "Classes Errors", "HKEY_CLASSES_ROOT\CLSID");
-insert into reg_scan_info values(6152, 61, "Windows_7_x64", 1, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(6153, 61, "Windows_7_x64", 1, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(6154, 61, "Windows_7_x64", 1, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
-insert into reg_scan_info values(6155, 61, "Windows_7_x64", 1, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(6150, 61, "Windows_7_x64", 1, 1, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
+insert into reg_scan_info values(6151, 61, "Windows_7_x64", 1, 2, "³ÌĞò¼æÈİĞÔÑ¡ÏîĞÅÏ¢", "App Compat Flags", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers");
+insert into reg_scan_info values(6152, 61, "Windows_7_x64", 1, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(6153, 61, "Windows_7_x64", 1, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(6154, 61, "Windows_7_x64", 1, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(6155, 61, "Windows_7_x64", 1, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
 
 -- windows 8 x86
-insert into reg_scan_info values(6200, 62, "Windows_8_x86", 0, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MEACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
-insert into reg_scan_info values(6201, 62, "Windows_8_x86", 0, "´íÎóµÄÀàĞÅÏ¢", "Classes Errors", "HKEY_CLASSES_ROOT\CLSID");
-insert into reg_scan_info values(6202, 62, "Windows_8_x86", 0, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(6203, 62, "Windows_8_x86", 0, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(6204, 62, "Windows_8_x86", 0, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
-insert into reg_scan_info values(6205, 62, "Windows_8_x86", 0, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(6200, 62, "Windows_8_x86", 0, 1, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
+insert into reg_scan_info values(6201, 62, "Windows_8_x86", 0, 2, "³ÌĞò¼æÈİĞÔÑ¡ÏîĞÅÏ¢", "App Compat Flags", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers");
+insert into reg_scan_info values(6202, 62, "Windows_8_x86", 0, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(6203, 62, "Windows_8_x86", 0, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(6204, 62, "Windows_8_x86", 0, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(6205, 62, "Windows_8_x86", 0, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
 
 -- windows 8 x64
-insert into reg_scan_info values(6250, 62, "Windows_8_x64", 1, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MEACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
-insert into reg_scan_info values(6251, 62, "Windows_8_x64", 1, "´íÎóµÄÀàĞÅÏ¢", "Classes Errors", "HKEY_CLASSES_ROOT\CLSID");
-insert into reg_scan_info values(6252, 62, "Windows_8_x64", 1, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(6253, 62, "Windows_8_x64", 1, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(6254, 62, "Windows_8_x64", 1, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
-insert into reg_scan_info values(6255, 62, "Windows_8_x64", 1, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(6250, 62, "Windows_8_x64", 1, 1, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
+insert into reg_scan_info values(6251, 62, "Windows_8_x64", 1, 2, "³ÌĞò¼æÈİĞÔÑ¡ÏîĞÅÏ¢", "App Compat Flags", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers");
+insert into reg_scan_info values(6252, 62, "Windows_8_x64", 1, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(6253, 62, "Windows_8_x64", 1, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(6254, 62, "Windows_8_x64", 1, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(6255, 62, "Windows_8_x64", 1, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
 
 -- windows 8.1 x86
-insert into reg_scan_info values(6300, 63, "Windows_81_x86", 0, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MEACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
-insert into reg_scan_info values(6301, 63, "Windows_81_x86", 0, "´íÎóµÄÀàĞÅÏ¢", "Classes Errors", "HKEY_CLASSES_ROOT\CLSID");
-insert into reg_scan_info values(6302, 63, "Windows_81_x86", 0, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(6303, 63, "Windows_81_x86", 0, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(6304, 63, "Windows_81_x86", 0, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
-insert into reg_scan_info values(6305, 63, "Windows_81_x86", 0, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(6300, 63, "Windows_81_x86", 0, 1, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
+insert into reg_scan_info values(6301, 63, "Windows_81_x86", 0, 2, "³ÌĞò¼æÈİĞÔÑ¡ÏîĞÅÏ¢", "App Compat Flags", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers");
+insert into reg_scan_info values(6302, 63, "Windows_81_x86", 0, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(6303, 63, "Windows_81_x86", 0, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(6304, 63, "Windows_81_x86", 0, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(6305, 63, "Windows_81_x86", 0, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
 
 -- windows 8.1 x64
-insert into reg_scan_info values(6350, 63, "Windows_81_x64", 1, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MEACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
-insert into reg_scan_info values(6351, 63, "Windows_81_x64", 1, "´íÎóµÄÀàĞÅÏ¢", "Classes Errors", "HKEY_CLASSES_ROOT\CLSID");
-insert into reg_scan_info values(6352, 63, "Windows_81_x64", 1, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(6353, 63, "Windows_81_x64", 1, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(6354, 63, "Windows_81_x64", 1, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
-insert into reg_scan_info values(6355, 63, "Windows_81_x64", 1, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(6350, 63, "Windows_81_x64", 1, 1, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
+insert into reg_scan_info values(6351, 63, "Windows_81_x64", 1, 2, "³ÌĞò¼æÈİĞÔÑ¡ÏîĞÅÏ¢", "App Compat Flags", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers");
+insert into reg_scan_info values(6352, 63, "Windows_81_x64", 1, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(6353, 63, "Windows_81_x64", 1, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(6354, 63, "Windows_81_x64", 1, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(6355, 63, "Windows_81_x64", 1, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
 
 -- windows 10 x86
-insert into reg_scan_info values(10000, 100, "Windows_10_x86", 0, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MEACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
-insert into reg_scan_info values(10001, 100, "Windows_10_x86", 0, "´íÎóµÄÀàĞÅÏ¢", "Classes Errors", "HKEY_CLASSES_ROOT\CLSID");
-insert into reg_scan_info values(10002, 100, "Windows_10_x86", 0, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(10003, 100, "Windows_10_x86", 0, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(10004, 100, "Windows_10_x86", 0, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
-insert into reg_scan_info values(10005, 100, "Windows_10_x86", 0, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(10000, 100, "Windows_10_x86", 0, 1, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
+insert into reg_scan_info values(10001, 100, "Windows_10_x86", 0, 2, "³ÌĞò¼æÈİĞÔÑ¡ÏîĞÅÏ¢", "App Compat Flags", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers");
+insert into reg_scan_info values(10002, 100, "Windows_xp_x86", 0, 2, "³ÌĞò¼æÈİĞÔÑ¡ÏîĞÅÏ¢", "App Compat Flags", "HKEY_CURRENT_USER\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store");
+insert into reg_scan_info values(10003, 100, "Windows_xp_x86", 0, 2, "³ÌĞò¼æÈİĞÔÑ¡ÏîĞÅÏ¢", "App Compat Flags", "HKEY_CURRENT_USER\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Persisted");
+insert into reg_scan_info values(10004, 100, "Windows_10_x86", 0, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(10005, 100, "Windows_10_x86", 0, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(10006, 100, "Windows_10_x86", 0, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(10007, 100, "Windows_10_x86", 0, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(10008, 100, "Windows_10_x86", 0, 5, "´íÎóµÄ°ïÖúĞÅÏ¢", "Wrong Help Info", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Help");
+insert into reg_scan_info values(10009, 100, "Windows_10_x86", 0, 5, "´íÎóµÄ°ïÖúĞÅÏ¢", "Wrong Help Info", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Html Help");
+insert into reg_scan_info values(10010, 100, "Windows_10_x86", 0, 6, "´íÎóµÄ°²×°ĞÅÏ¢", "App Install Errors", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders");
+insert into reg_scan_info values(10011, 100, "Windows_10_x86", 0, 7, "´íÎóÓ¦ÓÃ³ÌĞòÂ·¾¶", "App Path Errors", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths");
+insert into reg_scan_info values(10012, 100, "Windows_10_x86", 0, 8, "²ĞÁôµÄÈí¼ş°²×°", "The residual software install", "HKEY_LOCAL_MACHINE\SOFTWARE");
+insert into reg_scan_info values(10013, 100, "Windows_10_x86", 0, 8, "²ĞÁôµÄÈí¼ş°²×°", "The residual software install", "HKEY_CURRENT_USER\Software");
+insert into reg_scan_info values(10014, 100, "Windows_10_x86", 0, 2, "³ÌĞò¼æÈİĞÔÑ¡ÏîĞÅÏ¢", "App Compat Flags", "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers");
 
 -- windows 10 x64
-insert into reg_scan_info values(10050, 100, "Windows_10_x64", 1, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MEACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
-insert into reg_scan_info values(10051, 100, "Windows_10_x64", 1, "´íÎóµÄÀàĞÅÏ¢", "Classes Errors", "HKEY_CLASSES_ROOT\CLSID");
-insert into reg_scan_info values(10052, 100, "Windows_10_x64", 1, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(10053, 100, "Windows_10_x64", 1, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
-insert into reg_scan_info values(10054, 100, "Windows_10_x64", 1, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
-insert into reg_scan_info values(10055, 100, "Windows_10_x64", 1, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(10050, 100, "Windows_10_x64", 1, 1, "´íÎóµÄDLLĞÅÏ¢", "Invalid DLLs", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");
+insert into reg_scan_info values(10051, 100, "Windows_10_x64", 1, 2, "³ÌĞò¼æÈİĞÔÑ¡ÏîĞÅÏ¢", "App Compat Flags", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers");
+insert into reg_scan_info values(10052, 100, "Windows_10_x64", 1, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(10053, 100, "Windows_10_x64", 1, 3, "ÎŞĞ§µÄÆô¶¯Ïî", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
+insert into reg_scan_info values(10054, 100, "Windows_10_x64", 1, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(10055, 100, "Windows_10_x64", 1, 4, "²ĞÁôµÄÈí¼şĞ¶ÔØĞÅÏ¢", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(10056, 100, "Windows_xp_x64", 1, 2, "³ÌĞò¼æÈİĞÔÑ¡ÏîĞÅÏ¢", "App Compat Flags", "HKEY_CURRENT_USER\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store");
 
 
 

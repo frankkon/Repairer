@@ -10,6 +10,7 @@ QT       += sql
 
 LIBS += -lshell32
 LIBS += -lversion
+LIBS += -ladvapi32
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -52,7 +53,18 @@ SOURCES += main.cpp\
     objdiskclean.cpp \
     cleanitem.cpp \
     cdiskscanconfig.cpp \
-    cwin10x86diskscanconfig.cpp
+    cwin10x86diskscanconfig.cpp \
+    cwin10x64diskscanconfig.cpp \
+    cwinxpx86diskscanconfig.cpp \
+    cwinxpx64diskscanconfig.cpp \
+    cwinvistax64diskscanconfig.cpp \
+    cwinvistax86diskscanconfig.cpp \
+    cwin7x86diskscanconfig.cpp \
+    cwin7x64diskscanconfig.cpp \
+    cwin8x64diskscanconfig.cpp \
+    cwin8x86diskscanconfig.cpp \
+    cwin81x64diskscanconfig.cpp \
+    cwin81x86diskscanconfig.cpp
 
 HEADERS  += \
     widgetfilerepair.h \
@@ -83,7 +95,18 @@ HEADERS  += \
     objdiskclean.h \
     cleanitem.h \
     cdiskscanconfig.h \
-    cwin10x86diskscanconfig.h
+    cwin10x86diskscanconfig.h \
+    cwin10x64diskscanconfig.h \
+    cwinxpx86diskscanconfig.h \
+    cwinxpx64diskscanconfig.h \
+    cwinvistax64diskscanconfig.h \
+    cwinvistax86diskscanconfig.h \
+    cwin7x86diskscanconfig.h \
+    cwin7x64diskscanconfig.h \
+    cwin8x64diskscanconfig.h \
+    cwin8x86diskscanconfig.h \
+    cwin81x64diskscanconfig.h \
+    cwin81x86diskscanconfig.h
 
 RESOURCES += \
     Res.qrc

@@ -27,7 +27,7 @@ public slots:
     void as_objDiskClean_NotifyUIUpdateCleanProgress(qint64 fileCount, QString fileDesc, QString currentFile);
 
     //处理完成所有错误扫描信号
-    void as_objDiskClean_NotifyUIScanFinished(qint64 iTotalFileErrors, qint64 iTotalRegErrors);
+    void as_objDiskClean_NotifyUIScanFinished(qint64 iTotalFileErrors, double dTotalFileSize, qint64 iTotalRegErrors);
 
     //处理完成所有错误清理信号
     void as_objDiskClean_NotifyUICleanFinished();
@@ -69,6 +69,7 @@ private:
 
     //记录错误总数
     qint64 m_iTotalFileErrors;
+    double m_dTotalFileSize;
     qint64 m_iTotalRegErrors;
 };
 

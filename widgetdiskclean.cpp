@@ -29,26 +29,28 @@ WidgetDiskClean::WidgetDiskClean(QWidget* parent) :
 
     //设置信号槽
     //触发一键扫描信号处理
-    connect(ui->pushButtonStartScan, &QPushButton::clicked, m_pObjDiskClean, &ObjDiskClean::scanAllErrors);
+    connect(ui->pushButtonStartScan, &QPushButton::clicked,
+            m_pObjDiskClean, &ObjDiskClean::scanAllErrors);
 
     //触发一键清理信号处理
-    connect(ui->pushButtonCleanAll, &QPushButton::clicked, m_pObjDiskClean, &ObjDiskClean::cleanAllErrors);
+    connect(ui->pushButtonCleanAll, &QPushButton::clicked,
+            m_pObjDiskClean, &ObjDiskClean::cleanAllErrors);
 
     //触发通知界面更新当前扫描进展
-    //connect(m_pObjDiskClean, SIGNAL(sigNotifyUIUpdateScanProgress()), this, SLOT(on_objDiskClean_NotifyUIUpdateScanProgress()));
-    connect(m_pObjDiskClean, &ObjDiskClean::sigNotifyUIUpdateScanProgress, this, &WidgetDiskClean::as_objDiskClean_NotifyUIUpdateScanProgress);
+    connect(m_pObjDiskClean, &ObjDiskClean::sigNotifyUIUpdateScanProgress,
+            this, &WidgetDiskClean::as_objDiskClean_NotifyUIUpdateScanProgress);
 
     //触发通知界面更新当前清理进展
-    //connect(m_pObjDiskClean, SIGNAL(sigNotifyUIUpdateCleanProgress()), this, SLOT(on_objDiskClean_NotifyUIUpdateCleanProgress()));
-    connect(m_pObjDiskClean, &ObjDiskClean::sigNotifyUIUpdateCleanProgress, this, &WidgetDiskClean::as_objDiskClean_NotifyUIUpdateCleanProgress);
+    connect(m_pObjDiskClean, &ObjDiskClean::sigNotifyUIUpdateCleanProgress,
+            this, &WidgetDiskClean::as_objDiskClean_NotifyUIUpdateCleanProgress);
 
     //触发通知界面完成所有错误扫描
-    //connect(m_pObjDiskClean, SIGNAL(sigNotifyUIScanFinished(int)), this, SLOT(on_objDiskClean_NotifyUIScanFinished(int)));
-    connect(m_pObjDiskClean, &ObjDiskClean::sigNotifyUIScanFinished, this, &WidgetDiskClean::as_objDiskClean_NotifyUIScanFinished);
+    connect(m_pObjDiskClean, &ObjDiskClean::sigNotifyUIScanFinished,
+            this, &WidgetDiskClean::as_objDiskClean_NotifyUIScanFinished);
 
     //触发通知界面完成所有错误清理
-    //connect(m_pObjDiskClean, SIGNAL(sigNotifyUICleanFinished()), this, SLOT(on_objDiskClean_NotifyUICleanFinished()));
-    connect(m_pObjDiskClean, &ObjDiskClean::sigNotifyUICleanFinished, this, &WidgetDiskClean::as_objDiskClean_NotifyUICleanFinished);
+    connect(m_pObjDiskClean, &ObjDiskClean::sigNotifyUICleanFinished,
+            this, &WidgetDiskClean::as_objDiskClean_NotifyUICleanFinished);
 
 }
 
@@ -62,7 +64,9 @@ WidgetDiskClean::~WidgetDiskClean()
 }
 
 //处理扫描过程中更新UI扫描进展信号
-void WidgetDiskClean::as_objDiskClean_NotifyUIUpdateScanProgress(qint64 fileCount, QString fileDesc, QString currentFile)
+void WidgetDiskClean::as_objDiskClean_NotifyUIUpdateScanProgress(qint64 fileCount,
+                                                                 QString fileDesc,
+                                                                 QString currentFile)
 {
     qDebug() << "处理扫描过程中更新UI扫描进展信号:on_objDiskClean_NotifyUIUpdateScanProgress()";
 
@@ -78,33 +82,48 @@ void WidgetDiskClean::as_objDiskClean_NotifyUIUpdateScanProgress(qint64 fileCoun
 
 
 //处理清理过程中更新UI清理进展信号
-void WidgetDiskClean::as_objDiskClean_NotifyUIUpdateCleanProgress(qint64 fileCount, QString fileDesc, QString currentFile)
+void WidgetDiskClean::as_objDiskClean_NotifyUIUpdateCleanProgress(qint64 fileCount,
+                                                                  QString fileDesc,
+                                                                  QString currentFile)
 {
     qDebug() << "处理清理过程中更新UI清理进展信号:on_objDiskClean_NotifyUIUpdateCleanProgress()";
     qDebug() << fileCount << currentFile << fileDesc;
-    //ToDo:
+
     //更新进度条
+    ui->progressBarScan->setMaximum(fileCount);
+    int progress = ui->progressBarScan->value();
+    ui->progressBarScan->setValue(progress+1);
 
     //更新扫描文件
+    ui->labelScanStarting->setText(fileDesc);
+    ui->labelScanningFile->setText(currentFile);
 
 }
 
 //处理完成所有错误扫描信号
-void WidgetDiskClean::as_objDiskClean_NotifyUIScanFinished(qint64 iTotalFileErrors, qint64 iTotalRegErrors)
+void WidgetDiskClean::as_objDiskClean_NotifyUIScanFinished(qint64 iTotalFileErrors,
+                                                           double dTotalFileSize,
+                                                           qint64 iTotalRegErrors)
 {
     qDebug() << "处理完成所有错误扫描信号:on_objDiskClean_NotifyUIScanFinished()";
 
     m_iTotalFileErrors = iTotalFileErrors;
+    m_dTotalFileSize = dTotalFileSize;
     m_iTotalRegErrors = iTotalRegErrors;
 
     //更新屏幕顶部提示信息
     ui->labelScanStarting->setText(tr("System Scanning has Finished!"));
 
+    //更新进度条
+    int max = ui->progressBarScan->maximum();
+    ui->progressBarScan->setValue(max);
+
     //更新表格
     appendTableItem();
 
     //更新下方屏幕下方统计信息
-    QString sTotal = QString("Total %1 trush files or registory error has been found.").arg(m_iTotalFileErrors + m_iTotalRegErrors);
+    QString sTotal = QString("Total %1 trush files or registory error has been found.")
+            .arg(m_iTotalFileErrors + m_iTotalRegErrors);
     ui->labelTotalInfo->setText(sTotal);
 
     enablePushButtons();
@@ -123,7 +142,8 @@ void WidgetDiskClean::as_objDiskClean_NotifyUICleanFinished()
     //appendTableItem();
 
     //更新下方屏幕下方统计信息
-    QString total = QString("Total %1 trush files or registory error has been cleaned.").arg(100);
+    QString total = QString("Total %1 trush files or registory error has been cleaned.")
+            .arg(100);
     ui->labelTotalInfo->setText(total);
 
     enablePushButtons();
@@ -168,16 +188,18 @@ void WidgetDiskClean::initUI()
     ui->pushButtonCleanAll->setText(tr("Clean All"));
 
     //初始化显示结果的表格widget
-    ui->tableErrorInfo->setColumnCount(2);
+    ui->tableErrorInfo->setColumnCount(3);
     ui->tableErrorInfo->setSortingEnabled(false);
     ui->tableErrorInfo->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
     ui->tableErrorInfo->verticalHeader()->setHidden(true);
-    ui->tableErrorInfo->horizontalHeader()->setStyleSheet("QHeaderView::section{background:skyblue}");
+    ui->tableErrorInfo->horizontalHeader()
+            ->setStyleSheet("QHeaderView::section{background:skyblue}");
     QStringList headers;
-    headers << "Error Type" << "Error Count";
+    headers << "Error Type" << "Error Count" << "Total Size(MB)";
     ui->tableErrorInfo->setHorizontalHeaderLabels(headers);
-    ui->tableErrorInfo->setColumnWidth(0, TABLE_WIDTH*2/3);
-    ui->tableErrorInfo->setColumnWidth(1, TABLE_WIDTH/3-31);
+    ui->tableErrorInfo->setColumnWidth(0, TABLE_WIDTH/2-31);
+    ui->tableErrorInfo->setColumnWidth(1, TABLE_WIDTH/4);
+    ui->tableErrorInfo->setColumnWidth(2, TABLE_WIDTH/4);
 
     //初始化扫描图片显示label，先显示一张静态的
     deactivateScanIcon();
@@ -202,6 +224,10 @@ void WidgetDiskClean::appendTableItem()
     itemNum->setText(QString::number(m_iTotalFileErrors));
     table->setItem(iRowCount, 1, itemNum);
 
+    QTableWidgetItem* itemSize = new QTableWidgetItem();
+    itemSize->setText(QString::number(m_dTotalFileSize));
+    table->setItem(iRowCount, 2, itemSize);
+
     iRowCount++;
 
     table->setRowCount(iRowCount+1);
@@ -214,6 +240,10 @@ void WidgetDiskClean::appendTableItem()
     QTableWidgetItem* itemRegNum = new QTableWidgetItem();
     itemRegNum->setText(QString::number(m_iTotalRegErrors));
     table->setItem(iRowCount, 1, itemRegNum);
+
+    QTableWidgetItem* itemRegSize = new QTableWidgetItem();
+    itemRegSize->setText("NA");
+    table->setItem(iRowCount, 2, itemRegSize);
 
     iRowCount++;
 
