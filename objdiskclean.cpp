@@ -1,6 +1,7 @@
 ﻿#include "objdiskclean.h"
 #include "tool.h"
 #include "global.h"
+#include "Log.h"
 
 #include <QDebug>
 #include <QDir>
@@ -31,11 +32,17 @@ ObjDiskClean::~ObjDiskClean()
 void ObjDiskClean::scanAllErrors()
 {
     qDebug() << "扫描所有注册表错误和磁盘垃圾:scanAllErrors()";
+    CLog::getInstance()->logDebug("......ObjDiskClean::scanAllErrors()......");
 
     m_iTotalScanedFiles = 0;
     m_iTotalScanedRegs = 0;
     scanAllTrashFiles();
     scanAllRegErrors();
+
+#ifndef QT_NO_DEBUG
+    dumpScanFile();
+    dumpScanReg();
+#endif
 
     //完成所有扫描后通知UI
     emit sigNotifyUIScanFinished(m_iTotalScanedFiles,
@@ -57,11 +64,13 @@ void ObjDiskClean::cleanAllErrors()
 void ObjDiskClean::scanAllTrashFiles()
 {
     qDebug() << "扫描所有磁盘垃圾:scanAllTrashFiles()";
+    CLog::getInstance()->logDebug("......ObjDiskClean::scanAllTrashFiles()......");
 
     //获取需要扫描的路径信息
     QList<TDiskScanInfo*>* pList = m_pDiskScanConfig->getDiskScanInfo();
     if(NULL != pList)
     {
+        CLog::getInstance()->logDebug("......开始逐个路径扫描垃圾文件......");
         QListIterator<TDiskScanInfo*> it(*pList);
         while(it.hasNext())
         {
@@ -73,11 +82,13 @@ void ObjDiskClean::scanAllTrashFiles()
 void ObjDiskClean::scanAllRegErrors()
 {
     qDebug() << "扫描所有注册表错误:scanAllRegErrors()";
+    CLog::getInstance()->logDebug("......ObjDiskClean::scanAllRegErrors()......");
 
     //获取需要扫描的注册表路径
     QList<TRegScanInfo*>* pList = m_pDiskScanConfig->getRegScanInfo();
     if(NULL != pList)
     {
+        CLog::getInstance()->logDebug("......开始逐个路径扫描注册表......");
         QListIterator<TRegScanInfo*> it(*pList);
         while(it.hasNext())
         {
@@ -141,6 +152,8 @@ void ObjDiskClean::scanTrashFilesInPath(TDiskScanInfo* scanInfo)
     qDebug() << "清理指定目录的磁盘垃圾:scanTrashFilesInPath()";
     qDebug() << "正在扫描" << scanInfo->desc_cn;
     qDebug() << scanInfo->trash_path;
+    CLog::getInstance()->logDebug("......ObjDiskClean::scanTrashFilesInPath......");
+    CLog::getInstance()->logDebug(scanInfo->trash_path.toStdString().c_str());
 
     scanInfo->total_size = 0;
     scanInfo->file_count = 0;
@@ -232,6 +245,8 @@ void ObjDiskClean::scanRegInPath(TRegScanInfo* scanInfo)
     qDebug() << "扫描指定的注册表路径:scanRegInPath()";
     qDebug() << "正在扫描" << scanInfo->desc_cn;
     qDebug() << scanInfo->reg_path;
+    CLog::getInstance()->logDebug("......ObjDiskClean::scanRegInPath......");
+    CLog::getInstance()->logDebug(scanInfo->reg_path.toStdString().c_str());
 
     switch (scanInfo->err_type)
     {
@@ -290,8 +305,10 @@ void ObjDiskClean::scanRegByDllErrors(TRegScanInfo* scanInfo)
 
     //Registry64Format保证兼容32位和64位系统
     QSettings reg(regPath, QSettings::Registry64Format);
+    //QSettings reg(regPath, QSettings::NativeFormat);
 
     DWORD dw = 0;
+    DWORD dwType = 0;
     DWORD sdw = sizeof(dw);
     HKEY hkResult = NULL;
     LONG rt = 0;
@@ -317,8 +334,16 @@ void ObjDiskClean::scanRegByDllErrors(TRegScanInfo* scanInfo)
         //在替换反斜杠之前先保存下来
         sOrginKey = key;
         key = key.replace("/","\\");
-        ::RegGetValue(hkResult, NULL, (PCWSTR)key.constData(),
-                      RRF_RT_DWORD, NULL, &dw, &sdw);
+
+        //保持对Windows XP x86的兼容，在Windows XP x86下没有次函数
+        //::RegGetValue(hkResult, NULL, (PCWSTR)key.constData(),
+        //              RRF_RT_DWORD, NULL, &dw, &sdw);
+        ::RegQueryValueEx(hkResult, (PCWSTR)key.constData(), NULL, &dwType, (LPBYTE)(&dw), &sdw);
+        if(REG_DWORD != dwType)
+        {
+            emit sigNotifyUIUpdateScanProgress(keyCount, scanInfo->desc_en, key);
+            continue;
+        }
 
         //如果引用计数为0，则需要删除
         if(0 == dw)
@@ -336,16 +361,18 @@ void ObjDiskClean::scanRegByAppCompat(TRegScanInfo* scanInfo)
 {
     //Registry64Format保证兼容32位和64位系统
     QSettings reg(scanInfo->reg_path, QSettings::Registry64Format);
+    //QSettings reg(scanInfo->reg_path, QSettings::NativeFormat);
 
     QStringList keyList = reg.childKeys();
     int keyCount = keyList.count();
     foreach(QString key, keyList)
     {
         //没有路径标识的键值不确定，暂不处理
-        if(!key.contains("/"))
-        {
-            continue;
-        }
+        //if(!key.contains("/"))
+        //{
+        //    emit sigNotifyUIUpdateScanProgress(keyCount, scanInfo->desc_en, key);
+        //    continue;
+        //}
 
         QFile file(key);
 
@@ -363,6 +390,7 @@ void ObjDiskClean::scanRegByInvalidStartup(TRegScanInfo* scanInfo)
 {
     //Registry64Format保证兼容32位和64位系统
     QSettings reg(scanInfo->reg_path, QSettings::Registry64Format);
+    //QSettings reg(scanInfo->reg_path, QSettings::NativeFormat);
 
     QStringList keyList = reg.childKeys();
     int keyCount = keyList.count();
@@ -373,6 +401,7 @@ void ObjDiskClean::scanRegByInvalidStartup(TRegScanInfo* scanInfo)
         int idx = value.indexOf(".exe", 0, Qt::CaseInsensitive);
         if(idx < 0) //没有.exe的情况比较复杂，不处理
         {
+            emit sigNotifyUIUpdateScanProgress(keyCount, scanInfo->desc_en, key);
             continue;
         }
 
@@ -397,6 +426,7 @@ void ObjDiskClean::scanRegByResidualUninstall(TRegScanInfo* scanInfo)
     //其他情况的不处理。
 
     QSettings reg(scanInfo->reg_path, QSettings::Registry64Format);
+    //QSettings reg(scanInfo->reg_path, QSettings::NativeFormat);
     QStringList groupList = reg.childGroups();
     int groupCount = groupList.count();
     foreach(QString group, groupList)
@@ -408,6 +438,7 @@ void ObjDiskClean::scanRegByResidualUninstall(TRegScanInfo* scanInfo)
             scanInfo->err_list.append(group);
             m_iTotalScanedRegs++;
             reg.endGroup();
+            emit sigNotifyUIUpdateScanProgress(groupCount, scanInfo->desc_en, group);
             continue;
         }
 
@@ -418,6 +449,7 @@ void ObjDiskClean::scanRegByResidualUninstall(TRegScanInfo* scanInfo)
                     || value.contains("RunDll32", Qt::CaseInsensitive))
             {
                 reg.endGroup();
+                emit sigNotifyUIUpdateScanProgress(groupCount, scanInfo->desc_en, group);
                 continue;
             }
 
@@ -446,6 +478,7 @@ void ObjDiskClean::scanRegByWrongHelp(TRegScanInfo* scanInfo)
 {
     //Registry64Format保证兼容32位和64位系统
     QSettings reg(scanInfo->reg_path, QSettings::Registry64Format);
+    //QSettings reg(scanInfo->reg_path, QSettings::NativeFormat);
 
     QStringList keyList = reg.childKeys();
     int keyCount = keyList.count();
@@ -469,6 +502,7 @@ void ObjDiskClean::scanRegByAppInstall(TRegScanInfo* scanInfo)
 {
     //Registry64Format保证兼容32位和64位系统
     QSettings reg(scanInfo->reg_path, QSettings::Registry64Format);
+    //QSettings reg(scanInfo->reg_path, QSettings::NativeFormat);
 
     QStringList keyList = reg.childKeys();
     int keyCount = keyList.count();
@@ -496,6 +530,7 @@ void ObjDiskClean::scanRegByResidualInstall(TRegScanInfo* scanInfo)
 {
     //Registry64Format保证兼容32位和64位系统
     QSettings reg(scanInfo->reg_path, QSettings::Registry64Format);
+    //QSettings reg(scanInfo->reg_path, QSettings::NativeFormat);
 
     QStringList groupList = reg.childGroups();
     int groupCount = groupList.count();
@@ -505,6 +540,7 @@ void ObjDiskClean::scanRegByResidualInstall(TRegScanInfo* scanInfo)
         //这里先硬编码，如果类似目录比较多，后续做成白名单。
         if(group.contains("Policies", Qt::CaseInsensitive))
         {
+            emit sigNotifyUIUpdateScanProgress(groupCount, scanInfo->desc_en, group);
             continue;
         }
 
@@ -567,6 +603,56 @@ HKEY ObjDiskClean::getPrimaryKeyHandle(QString sKey)
 }
 
 
+#ifndef QT_NO_DEBUG
+void ObjDiskClean::dumpScanFile()
+{
+    QFile file("dumpFile.txt");
+    file.open(QFile::WriteOnly | QFile::Truncate);
+    QTextStream out(&file);
+    QList<TDiskScanInfo*>* pList = m_pDiskScanConfig->getDiskScanInfo();
+    if(NULL != pList)
+    {
+        QListIterator<TDiskScanInfo*> it(*pList);
+        while(it.hasNext())
+        {
+            out << "===================================================" << endl;
+            TDiskScanInfo* scaninfo = it.next();
+            out << "=========" << scaninfo->desc_cn << "=============" << endl;
+            foreach(QString str, scaninfo->file_list)
+            {
+                out << str << endl;
+            }
+            out << "===================================================" << endl;
+        }
+    }}
+
+void ObjDiskClean::dumpScanReg()
+{
+    QFile file("dumpReg.txt");
+    if (file.open(QFile::WriteOnly | QFile::Truncate))
+    {
+        QTextStream stream(&file);
+        QList<TRegScanInfo*>* pList = m_pDiskScanConfig->getRegScanInfo();
+        if(NULL != pList)
+        {
+            QListIterator<TRegScanInfo*> it(*pList);
+            while(it.hasNext())
+            {
+                stream << "============================" << endl;
+                TRegScanInfo* p = it.next();
+                QStringList lst = p->err_list;
+                stream << "====" << p->desc_cn << "====" << endl;
+                foreach(QString str, lst)
+                {
+                    stream << str << endl;
+                }
+                stream << "============================" << endl;
+
+            }
+        }
+    }
+}
+#endif
 
 
 

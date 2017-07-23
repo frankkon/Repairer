@@ -64,7 +64,8 @@ SOURCES += main.cpp\
     cwin8x64diskscanconfig.cpp \
     cwin8x86diskscanconfig.cpp \
     cwin81x64diskscanconfig.cpp \
-    cwin81x86diskscanconfig.cpp
+    cwin81x86diskscanconfig.cpp \
+    Log.cpp
 
 HEADERS  += \
     widgetfilerepair.h \
@@ -106,7 +107,8 @@ HEADERS  += \
     cwin8x64diskscanconfig.h \
     cwin8x86diskscanconfig.h \
     cwin81x64diskscanconfig.h \
-    cwin81x86diskscanconfig.h
+    cwin81x86diskscanconfig.h \
+    Log.h
 
 RESOURCES += \
     Res.qrc

@@ -33,7 +33,15 @@ create table reg_scan_info
 -- //disk_scan_info
 -- ///////////////////////////////////////////////////////////////////////////////////////////////
 -- windows xp x86
-insert into disk_scan_info values(5100, 51, "Windows_xp_x86", 0, "Windows系统临时文件", "Windows System Temp Files", "%UserProfile%\AppData\Local\Temp","", 1);
+insert into disk_scan_info values(5100, 51, "Windows_xp_x86", 0, "Windows系统临时文件", "Windows System Temp Files", "%UserProfile%\Local Settings\Temp","", 1);
+-- insert into disk_scan_info values(5101, 51, "Windows_xp_x86", 0, "Windows 系统日志文件", "Windows System Log Files", "C:\Windows\Logs","", 1);
+-- insert into disk_scan_info values(5102, 51, "Windows_xp_x86", 0, "IIS日志文件", "IIS Log Files", "C:\Windows\System32\LogFiles","", 1);
+-- insert into disk_scan_info values(5105, 51, "Windows_xp_x86", 0, "Windows WinSxs备份缓存", "Windows WinSxs Backup Cache", "C:\Windows\WinSxS\Backup","", 1);
+-- insert into disk_scan_info values(5106, 51, "Windows_xp_x86", 0, "manifast cashe缓存", "manifast cashe", "C:\Windows\WinSxS\ManifestCache","", 1);
+-- insert into disk_scan_info values(5107, 51, "Windows_xp_x86", 0, "缩略图缓存", "Thumb Cache", "%UserProfile%\AppData\Local\Microsoft\Windows\Explorer","", 1);
+insert into disk_scan_info values(5108, 51, "Windows_xp_x86", 0, "系统图标缓存", "System Icon Cache", "%UserProfile%\Local Settings\Application Data","IconCache.db", 0);
+-- insert into disk_scan_info values(5109, 51, "Windows_xp_x86", 0, "无效快捷方式", "Invalid shortcut", "%UserProfile%\AppData\Roaming\Microsoft\Windows\Recent","", 1);
+insert into disk_scan_info values(5110, 51, "Windows_xp_x86", 0, "IE浏览器缓存", "IE Cache", "%UserProfile%\Local Settings\Temporary Internet Files","", 1);
 
 -- windows xp x64
 insert into disk_scan_info values(5250, 52, "Windows_xp_x64", 1, "Windows系统临时文件", "Windows System Temp Files", "%UserProfile%\AppData\Local\Temp","", 1);
@@ -111,6 +119,13 @@ insert into reg_scan_info values(5103, 51, "Windows_xp_x86", 0, 3, "无效的启动项
 insert into reg_scan_info values(5104, 51, "Windows_xp_x86", 0, 3, "无效的启动项", "Invalid Startup Items", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
 insert into reg_scan_info values(5105, 51, "Windows_xp_x86", 0, 4, "残留的软件卸载信息", "The residual software uninstall", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\windows\CurrentVersion\Uninstall");
 insert into reg_scan_info values(5106, 51, "Windows_xp_x86", 0, 4, "残留的软件卸载信息", "The residual software uninstall", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall");
+insert into reg_scan_info values(5108, 51, "Windows_xp_x86", 0, 5, "错误的帮助信息", "Wrong Help Info", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Help");
+insert into reg_scan_info values(5109, 51, "Windows_xp_x86", 0, 5, "错误的帮助信息", "Wrong Help Info", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Html Help");
+insert into reg_scan_info values(5110, 51, "Windows_xp_x86", 0, 6, "错误的安装信息", "App Install Errors", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders");
+insert into reg_scan_info values(5111, 51, "Windows_xp_x86", 0, 7, "错误应用程序路径", "App Path Errors", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths");
+insert into reg_scan_info values(5112, 51, "Windows_xp_x86", 0, 8, "残留的软件安装", "The residual software install", "HKEY_LOCAL_MACHINE\SOFTWARE");
+insert into reg_scan_info values(5113, 51, "Windows_xp_x86", 0, 8, "残留的软件安装", "The residual software install", "HKEY_CURRENT_USER\Software");
+insert into reg_scan_info values(5114, 51, "Windows_xp_x86", 0, 2, "程序兼容性选项信息", "App Compat Flags", "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers");
 
 -- windows xp x64
 insert into reg_scan_info values(5250, 52, "Windows_xp_x64", 1, 1, "错误的DLL信息", "Invalid DLLs", "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDlls");

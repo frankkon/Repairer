@@ -59,6 +59,11 @@ private:
     //替换目录中的环境变量
     void replaceEnv(QString& srcDir);
 
+#ifndef QT_NO_DEBUG
+    void dumpScanFile();
+    void dumpScanReg();
+#endif
+
 
 private:
     //初始化扫描的垃圾目录和注册表路径

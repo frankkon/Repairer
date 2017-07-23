@@ -3,7 +3,18 @@
 #include "global.h"
 #include "cdiskscanconfig.h"
 #include "cwin10x86diskscanconfig.h"
-
+#include "cwin10x64diskscanconfig.h"
+#include "cwinxpx64diskscanconfig.h"
+#include "cwinxpx86diskscanconfig.h"
+#include "cwinvistax64diskscanconfig.h"
+#include "cwinvistax86diskscanconfig.h"
+#include "cwin7x64diskscanconfig.h"
+#include "cwin7x86diskscanconfig.h"
+#include "cwin81x64diskscanconfig.h"
+#include "cwin81x86diskscanconfig.h"
+#include "cwin8x64diskscanconfig.h"
+#include "cwin8x86diskscanconfig.h"
+#include "Log.h"
 
 #include <QtSql/QSql>
 #include <QtSql/QSqlQuery>
@@ -47,64 +58,81 @@ CDiskScanConfig* CDiskScanConfig::loadConfig()
     {
         case WINDOWS_XP_X86:
         {
-            return NULL;
+            CLog::getInstance()->logDebug("......CWinXpX86DiskScanConfig......");
+            return new CWinXpX86DiskScanConfig();
         }
         case WINDOWS_XP_X64:
         {
-            return NULL;
+            CLog::getInstance()->logDebug("......CWinXpX64DiskScanConfig......");
+            return new CWinXpX64DiskScanConfig();
         }
         case WINDOWS_VISTA_X86:
         {
-            return NULL;
+            CLog::getInstance()->logDebug("......CWinVistaX86DiskScanConfig......");
+            return new CWinVistaX86DiskScanConfig();
         }
         case WINDOWS_VISTA_X64:
         {
-            return NULL;
+            CLog::getInstance()->logDebug("......CWinVistaX64DiskScanConfig......");
+            return new CWinVistaX64DiskScanConfig();
         }
         case WINDOWS_7_X86:
         {
-            return NULL;
+            CLog::getInstance()->logDebug("......CWin7X86DiskScanConfig......");
+            return new CWin7X86DiskScanConfig();
         }
         case WINDOWS_7_X64:
         {
-            return NULL;
+            CLog::getInstance()->logDebug("......CWin7X64DiskScanConfig......");
+            return new CWin7X64DiskScanConfig();
         }
         case WINDOWS_8_X86:
         {
-            return NULL;
+            CLog::getInstance()->logDebug("......CWin8X86DiskScanConfig......");
+            return new CWin8X86DiskScanConfig();
         }
         case WINDOWS_8_X64:
         {
-            return NULL;
+            CLog::getInstance()->logDebug("......CWin8X64DiskScanConfig......");
+            return new CWin8X64DiskScanConfig();
         }
         case WINDOWS_81_X86:
         {
-            return NULL;
+            CLog::getInstance()->logDebug("......CWin81X86DiskScanConfig......");
+            return new CWin81X86DiskScanConfig();
         }
         case WINDOWS_81_X64:
         {
-            return NULL;
+            CLog::getInstance()->logDebug("......CWin81X64DiskScanConfig......");
+            return new CWin81X64DiskScanConfig();
         }
         case WINDOWS_10_X86:
         {
+            CLog::getInstance()->logDebug("......CWin10X86DiskScanConfig......");
             return new CWin10X86DiskScanConfig();
         }
         case WINDOWS_10_X64:
         {
-            return NULL;
+            CLog::getInstance()->logDebug("......CWin10X64DiskScanConfig......");
+            return new CWin10X64DiskScanConfig();
         }
         default:
         {
-            return NULL;
+            CLog::getInstance()->logDebug("......use Default:CWinXpX86DiskScanConfig......");
+            return new CWinXpX86DiskScanConfig();
         }
     }
 }
 
 bool CDiskScanConfig::loadDiskScanConfigFromDb(QString sSql)
 {
+    CLog::getInstance()->logDebug("......loadDiskScanConfigFromDb......");
     if(!m_dbConnect.open())
     {
         qDebug() << "database open fail.";
+        CLog::getInstance()->logDebug("......database open fail......");
+        QSqlError err = m_dbConnect.lastError();
+        CLog::getInstance()->logDebug(err.text().toStdString().c_str());
         return false;
     }
 
@@ -133,6 +161,7 @@ bool CDiskScanConfig::loadDiskScanConfigFromDb(QString sSql)
     {
         qDebug() << "sql exec fail.";
         qDebug() << err.text();
+        CLog::getInstance()->logDebug(err.text().toStdString().c_str());
         m_dbConnect.close();
         return false;
     }

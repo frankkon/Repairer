@@ -1,4 +1,5 @@
 #include "cwinxpx86diskscanconfig.h"
+#include "Log.h"
 
 CWinXpX86DiskScanConfig::CWinXpX86DiskScanConfig()
 {
@@ -31,6 +32,7 @@ QList<TDiskScanInfo*>* CWinXpX86DiskScanConfig::getDiskScanInfo()
 QList<TRegScanInfo*>* CWinXpX86DiskScanConfig::getRegScanInfo()
 {
     //已经加载过了，则直接返回
+    CLog::getInstance()->logDebug("......CWinXpX86DiskScanConfig::getRegScanInfo()......");
     if(!m_lstRegScanInfo.isEmpty())
     {
         return &m_lstRegScanInfo;
@@ -42,10 +44,12 @@ QList<TRegScanInfo*>* CWinXpX86DiskScanConfig::getRegScanInfo()
 
     if(loadRegScanConfigFromDb(sSql))
     {
+        CLog::getInstance()->logDebug("......loadRegScanConfigFromDb()---OK......");
         return &m_lstRegScanInfo;
     }
     else
     {
+        CLog::getInstance()->logDebug("......loadRegScanConfigFromDb()---Fail......");
         return NULL;
     }
 }
