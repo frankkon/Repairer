@@ -20,7 +20,16 @@ QString Global::s_strHttpUrl = "http://file.dllescort.com";
 QString Global::s_strSystemUrl = "http://file.dllescort.com";
 QString Global::s_strDownloadPath;
 QString Global::s_strSystemDrive;
+
+// ***BEGIN*** kongjun 2017/7/24 modify
+//bool Global::s_bActive = true;
+#ifdef QT_NO_DEBUG
+bool Global::s_bActive = false;
+#else
 bool Global::s_bActive = true;
+#endif
+// ***END*** kongjun 2017/7/24 modify
+
 QColor Global::s_clrWidgetTop = QColor(96,107,136);
 QColor Global::s_clrWidgetLeft = QColor(71,84,99);
 SeriesNumber Global::s_seriesNumber;
