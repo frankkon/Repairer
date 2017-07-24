@@ -127,7 +127,6 @@ int main(int argc, char* argv[])
     */
 
     QApplication a(argc, argv);
-    CLog::getInstance()->logDebug("......创建QApplication完成......");
 
     //限制只能启动一个进程
     QSharedMemory shared_memory;
@@ -140,7 +139,6 @@ int main(int argc, char* argv[])
     shared_memory.create(1);
 
     WidgetMain w;
-    CLog::getInstance()->logDebug("......创建WidgetMain完成......");
     if(argc > 1)
     {
         w.hide();
@@ -167,8 +165,6 @@ int main(int argc, char* argv[])
     w.init();
 
     Global::readIni();
-
-    CLog::getInstance()->logDebug("......程序初始化完成......");
 
     return a.exec();
 }

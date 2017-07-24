@@ -58,67 +58,67 @@ CDiskScanConfig* CDiskScanConfig::loadConfig()
     {
         case WINDOWS_XP_X86:
         {
-            CLog::getInstance()->logDebug("......CWinXpX86DiskScanConfig......");
+            CLog::getInstance()->logDebug("......创建CWinXpX86DiskScanConfig，初始化垃圾扫描信息......");
             return new CWinXpX86DiskScanConfig();
         }
         case WINDOWS_XP_X64:
         {
-            CLog::getInstance()->logDebug("......CWinXpX64DiskScanConfig......");
+            CLog::getInstance()->logDebug("......创建CWinXpX64DiskScanConfig，初始化垃圾扫描信息......");
             return new CWinXpX64DiskScanConfig();
         }
         case WINDOWS_VISTA_X86:
         {
-            CLog::getInstance()->logDebug("......CWinVistaX86DiskScanConfig......");
+            CLog::getInstance()->logDebug("......创建CWinVistaX86DiskScanConfig，初始化垃圾扫描信息......");
             return new CWinVistaX86DiskScanConfig();
         }
         case WINDOWS_VISTA_X64:
         {
-            CLog::getInstance()->logDebug("......CWinVistaX64DiskScanConfig......");
+            CLog::getInstance()->logDebug("......创建CWinVistaX64DiskScanConfig，初始化垃圾扫描信息......");
             return new CWinVistaX64DiskScanConfig();
         }
         case WINDOWS_7_X86:
         {
-            CLog::getInstance()->logDebug("......CWin7X86DiskScanConfig......");
+            CLog::getInstance()->logDebug("......创建CWin7X86DiskScanConfig，初始化垃圾扫描信息......");
             return new CWin7X86DiskScanConfig();
         }
         case WINDOWS_7_X64:
         {
-            CLog::getInstance()->logDebug("......CWin7X64DiskScanConfig......");
+            CLog::getInstance()->logDebug("......创建CWin7X64DiskScanConfig，初始化垃圾扫描信息......");
             return new CWin7X64DiskScanConfig();
         }
         case WINDOWS_8_X86:
         {
-            CLog::getInstance()->logDebug("......CWin8X86DiskScanConfig......");
+            CLog::getInstance()->logDebug("......创建CWin8X86DiskScanConfig，初始化垃圾扫描信息......");
             return new CWin8X86DiskScanConfig();
         }
         case WINDOWS_8_X64:
         {
-            CLog::getInstance()->logDebug("......CWin8X64DiskScanConfig......");
+            CLog::getInstance()->logDebug("......创建CWin8X64DiskScanConfig，初始化垃圾扫描信息......");
             return new CWin8X64DiskScanConfig();
         }
         case WINDOWS_81_X86:
         {
-            CLog::getInstance()->logDebug("......CWin81X86DiskScanConfig......");
+            CLog::getInstance()->logDebug("......创建CWin81X86DiskScanConfig，初始化垃圾扫描信息......");
             return new CWin81X86DiskScanConfig();
         }
         case WINDOWS_81_X64:
         {
-            CLog::getInstance()->logDebug("......CWin81X64DiskScanConfig......");
+            CLog::getInstance()->logDebug("......创建CWin81X64DiskScanConfig，初始化垃圾扫描信息......");
             return new CWin81X64DiskScanConfig();
         }
         case WINDOWS_10_X86:
         {
-            CLog::getInstance()->logDebug("......CWin10X86DiskScanConfig......");
+            CLog::getInstance()->logDebug("......创建CWin10X86DiskScanConfig，初始化垃圾扫描信息......");
             return new CWin10X86DiskScanConfig();
         }
         case WINDOWS_10_X64:
         {
-            CLog::getInstance()->logDebug("......CWin10X64DiskScanConfig......");
+            CLog::getInstance()->logDebug("......创建CWin10X64DiskScanConfig，初始化垃圾扫描信息......");
             return new CWin10X64DiskScanConfig();
         }
         default:
         {
-            CLog::getInstance()->logDebug("......use Default:CWinXpX86DiskScanConfig......");
+            CLog::getInstance()->logDebug("......未知系统，使用默认，创建CWinXpX86DiskScanConfig，初始化垃圾扫描信息......");
             return new CWinXpX86DiskScanConfig();
         }
     }
@@ -126,7 +126,7 @@ CDiskScanConfig* CDiskScanConfig::loadConfig()
 
 bool CDiskScanConfig::loadDiskScanConfigFromDb(QString sSql)
 {
-    CLog::getInstance()->logDebug("......loadDiskScanConfigFromDb......");
+    CLog::getInstance()->logDebug("......CDiskScanConfig::loadDiskScanConfigFromDb......");
     if(!m_dbConnect.open())
     {
         qDebug() << "database open fail.";
@@ -169,9 +169,11 @@ bool CDiskScanConfig::loadDiskScanConfigFromDb(QString sSql)
 
 bool CDiskScanConfig::loadRegScanConfigFromDb(QString sSql)
 {
+    CLog::getInstance()->logDebug("......CDiskScanConfig::loadRegScanConfigFromDb......");
     if(!m_dbConnect.open())
     {
         qDebug() << "database open fail.";
+        CLog::getInstance()->logDebug("......database open fail......");
         return false;
     }
 
@@ -199,6 +201,8 @@ bool CDiskScanConfig::loadRegScanConfigFromDb(QString sSql)
     {
         qDebug() << "sql exec fail.";
         qDebug() << err.text();
+        CLog::getInstance()->logDebug("SQL执行错误：");
+        CLog::getInstance()->logDebug(err.text().toStdString().c_str());
         m_dbConnect.close();
         return false;
     }

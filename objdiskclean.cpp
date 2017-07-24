@@ -9,6 +9,13 @@
 #include <QSettings>
 #include <QList>
 #include <QProcessEnvironment>
+#include <QRegExp>
+
+//以盘符打头的路径
+#define FULL_PATH_A "^[a-zA-Z]:\\\\"
+
+//以环境变量打头的路径
+#define FULL_PATH_B "^%[a-zA-Z]*%\\\\"
 
 ObjDiskClean::ObjDiskClean(QObject* parent) :
     QObject(parent),
@@ -119,6 +126,7 @@ void ObjDiskClean::cleanAllTrashFiles()
                                                     pScanInfo->desc_en,
                                                     file);
             }
+            pScanInfo->file_list.clear();
         }
     }
 
@@ -133,7 +141,7 @@ void ObjDiskClean::cleanAllRegErrors()
         while(it.hasNext())
         {
             TRegScanInfo* pScanInfo = it.next();
-            QSettings reg(pScanInfo->reg_path);
+            QSettings reg(pScanInfo->reg_path, QSettings::Registry64Format);
             QStringList keyList = pScanInfo->err_list;
             foreach(QString key, keyList)
             {
@@ -142,6 +150,7 @@ void ObjDiskClean::cleanAllRegErrors()
                                                     pScanInfo->desc_en,
                                                     pScanInfo->reg_path + key);
             }
+            pScanInfo->err_list.clear();
         }
     }
 }
@@ -224,7 +233,7 @@ void ObjDiskClean::scanTrashFilesInPath(TDiskScanInfo* scanInfo)
 
 }
 
-//替换路径中的环境遍历
+//替换路径中的环境变量
 void ObjDiskClean::replaceEnv(QString& srcDir)
 {
     //只能处理只有一个环境变量的情况
@@ -247,6 +256,9 @@ void ObjDiskClean::scanRegInPath(TRegScanInfo* scanInfo)
     qDebug() << scanInfo->reg_path;
     CLog::getInstance()->logDebug("......ObjDiskClean::scanRegInPath......");
     CLog::getInstance()->logDebug(scanInfo->reg_path.toStdString().c_str());
+
+    scanInfo->err_count = 0;
+    scanInfo->err_list.clear();
 
     switch (scanInfo->err_type)
     {
@@ -365,16 +377,24 @@ void ObjDiskClean::scanRegByAppCompat(TRegScanInfo* scanInfo)
 
     QStringList keyList = reg.childKeys();
     int keyCount = keyList.count();
+    QRegExp expA(FULL_PATH_A);
+    QRegExp expB(FULL_PATH_B);
+
     foreach(QString key, keyList)
     {
-        //没有路径标识的键值不确定，暂不处理
-        //if(!key.contains("/"))
-        //{
-        //    emit sigNotifyUIUpdateScanProgress(keyCount, scanInfo->desc_en, key);
-        //    continue;
-        //}
+        QString tmpKey = key;
 
-        QFile file(key);
+        tmpKey.replace("\"", ""); //有些路径包含双引号，先去掉
+        replaceEnv(tmpKey);  //有些值的目录里面有环境变量。
+
+        //不是完整路径的键值不确定能否删除，暂不处理
+        if(!tmpKey.contains(expA) && !tmpKey.contains(expB))
+        {
+            emit sigNotifyUIUpdateScanProgress(keyCount, scanInfo->desc_en, key);
+            continue;
+        }
+
+        QFile file(tmpKey);
 
         //如果文件不存在，则需要删除
         if(!file.exists())
@@ -394,12 +414,18 @@ void ObjDiskClean::scanRegByInvalidStartup(TRegScanInfo* scanInfo)
 
     QStringList keyList = reg.childKeys();
     int keyCount = keyList.count();
+    QRegExp expA(FULL_PATH_A);
+    QRegExp expB(FULL_PATH_B);
+
     foreach(QString key, keyList)
     {
         QString value = reg.value(key).toString();
         value = value.replace("\"", "");
         int idx = value.indexOf(".exe", 0, Qt::CaseInsensitive);
-        if(idx < 0) //没有.exe的情况比较复杂，不处理
+
+        //没有.exe的情况比较复杂，不处理
+        //不是完整路径的不处理
+        if(idx < 0 || (!value.contains(expA) && !value.contains(expB)))
         {
             emit sigNotifyUIUpdateScanProgress(keyCount, scanInfo->desc_en, key);
             continue;
@@ -422,13 +448,16 @@ void ObjDiskClean::scanRegByResidualUninstall(TRegScanInfo* scanInfo)
 {
     //group里面没有键，将group加入待删除列表
     //UninstallString对应的执行文件不存在的，将group加入待删除列表
-    //通过MsiExec.exe或者RunDll32卸载的不处理
+    //不是完整路径的不处理
     //其他情况的不处理。
 
     QSettings reg(scanInfo->reg_path, QSettings::Registry64Format);
     //QSettings reg(scanInfo->reg_path, QSettings::NativeFormat);
     QStringList groupList = reg.childGroups();
     int groupCount = groupList.count();
+    QRegExp expA(FULL_PATH_A);
+    QRegExp expB(FULL_PATH_B);
+
     foreach(QString group, groupList)
     {
         reg.beginGroup(group);
@@ -442,18 +471,18 @@ void ObjDiskClean::scanRegByResidualUninstall(TRegScanInfo* scanInfo)
             continue;
         }
 
-        if(lstchildKeys.contains("UninstallString"))
+        if(lstchildKeys.contains("UninstallString", Qt::CaseInsensitive ))
         {
             QString value = reg.value("UninstallString").toString();
-            if(value.contains("MsiExec.exe", Qt::CaseInsensitive)
-                    || value.contains("RunDll32", Qt::CaseInsensitive))
+            value.replace("\"", ""); //有些路径包含双引号，先去掉
+
+            if(!value.contains(expA) && !value.contains(expB))
             {
                 reg.endGroup();
                 emit sigNotifyUIUpdateScanProgress(groupCount, scanInfo->desc_en, group);
                 continue;
             }
 
-            value.replace("\"", ""); //有些路径包含双引号，先去掉
             int idx = value.indexOf(".exe", 0, Qt::CaseInsensitive);
             if(-1 != idx)
             {
@@ -482,11 +511,22 @@ void ObjDiskClean::scanRegByWrongHelp(TRegScanInfo* scanInfo)
 
     QStringList keyList = reg.childKeys();
     int keyCount = keyList.count();
+    QRegExp expA(FULL_PATH_A);
+    QRegExp expB(FULL_PATH_B);
+
     foreach(QString key, keyList)
     {
         QString value = reg.value(key).toString();
-        value = value + "/" + key;
+        value.replace("\"", ""); //有些路径包含双引号，先去掉
         replaceEnv(value);  //有些值的目录里面有环境变量。
+        value = value + "/" + key; //正斜杠反斜杠都一样，qt会自动转换
+
+        //不是完整路径的不处理
+        if(!value.contains(expA) && !value.contains(expB))
+        {
+            emit sigNotifyUIUpdateScanProgress(keyCount, scanInfo->desc_en, key);
+            continue;
+        }
 
         QFile file(value);
         if(!file.exists())  //如果文件不存在，则需要删除
@@ -506,13 +546,24 @@ void ObjDiskClean::scanRegByAppInstall(TRegScanInfo* scanInfo)
 
     QStringList keyList = reg.childKeys();
     int keyCount = keyList.count();
+    QRegExp expA(FULL_PATH_A);
+    QRegExp expB(FULL_PATH_B);
+
     foreach(QString key, keyList)
     {
-        QString path = key;
-        replaceEnv(path);  //有些值的目录里面有环境变量。
+        QString tmpKey = key;
+        tmpKey.replace("\"", ""); //有些路径包含双引号，先去掉
+        replaceEnv(tmpKey);  //有些值的目录里面有环境变量。
 
-        QDir dir(path);
-        if(!dir.exists())  //如果文件不存在，则需要删除
+        //不是完整路径的不处理
+        if(!tmpKey.contains(expA) && !tmpKey.contains(expB))
+        {
+            emit sigNotifyUIUpdateScanProgress(keyCount, scanInfo->desc_en, key);
+            continue;
+        }
+
+        QDir dir(tmpKey);
+        if(!dir.exists())  //如果文件夹不存在，则需要删除
         {
             scanInfo->err_list.append(key);
             m_iTotalScanedRegs++;
@@ -521,9 +572,46 @@ void ObjDiskClean::scanRegByAppInstall(TRegScanInfo* scanInfo)
     }
 }
 
-void ObjDiskClean::scanRegByAppPath(TRegScanInfo* /*scanInfo*/)
+void ObjDiskClean::scanRegByAppPath(TRegScanInfo* scanInfo)
 {
-    //检查逻辑不确定，没有统一的规律，检查默认键的值不对。
+    //读取注册项下的“默认”键的值
+    //如果“默认”键的值位完整路径，则检查是否有效，否则忽略
+    //如果完整路径指示的文件不存在，则将该注册项加入待删除列表
+
+    QSettings reg(scanInfo->reg_path, QSettings::Registry64Format);
+    //QSettings reg(scanInfo->reg_path, QSettings::NativeFormat);
+
+    QStringList groupList = reg.childGroups();
+    int groupCount = groupList.count();
+    QRegExp expA(FULL_PATH_A);
+    QRegExp expB(FULL_PATH_B);
+    QRegExp endOfExe("\\.[eE][xX][eE]$");
+
+    foreach(QString group, groupList)
+    {
+        reg.beginGroup(group);
+        QString defaultKeyValue = reg.value(".").toString(); //读取注册项下的“默认”键值
+        defaultKeyValue.replace("\"", ""); //有些路径包含双引号，先去掉
+        replaceEnv(defaultKeyValue);  //有些值的目录里面有环境变量。
+
+        //不是完整路径的不处理,结尾不是exe执行文件的不处理
+        if( (!defaultKeyValue.contains(expA) && !defaultKeyValue.contains(expB))
+                || !defaultKeyValue.contains(endOfExe))
+        {
+            reg.endGroup();
+            emit sigNotifyUIUpdateScanProgress(groupCount, scanInfo->desc_en, group);
+            continue;
+        }
+
+        QFile file(defaultKeyValue);
+        if(!file.exists())  //如果文件不存在，则需要删除
+        {
+            scanInfo->err_list.append(group);
+            m_iTotalScanedRegs++;
+        }
+        reg.endGroup();
+        emit sigNotifyUIUpdateScanProgress(groupCount, scanInfo->desc_en, group);
+    }
 }
 
 void ObjDiskClean::scanRegByResidualInstall(TRegScanInfo* scanInfo)
@@ -538,7 +626,8 @@ void ObjDiskClean::scanRegByResidualInstall(TRegScanInfo* scanInfo)
     {
         //Policies这个目录比较特别，防止有问题，忽略
         //这里先硬编码，如果类似目录比较多，后续做成白名单。
-        if(group.contains("Policies", Qt::CaseInsensitive))
+        if(group.contains("Policies", Qt::CaseInsensitive)
+                || group.contains("Microsoft", Qt::CaseInsensitive))
         {
             emit sigNotifyUIUpdateScanProgress(groupCount, scanInfo->desc_en, group);
             continue;

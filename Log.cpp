@@ -30,12 +30,8 @@ CLog* CLog::getInstance()
     CLog::instance = new CLog();
     if(NULL != CLog::instance)
     {
-        //char sLogFile[NORMAL_BUF_SIZE + 1] = {0};
-        //std::string str = getLocalNowTime();
-        //sprintf_s(sLogFile, NORMAL_BUF_SIZE, "repairer%s.txt", str.c_str());
-        //sprintf_s(sLogFile, NORMAL_BUF_SIZE, "repairer-log.txt");
         CLog::instance->openLogFile("repairer-log.txt");
-        CLog::instance->setLogLevel(LOG_DEBUG);
+        //CLog::instance->setLogLevel(LOG_DEBUG);
     }
 
     return CLog::instance;
