@@ -42,33 +42,43 @@ insert into disk_scan_info values(5100, 51, "Windows_xp_x86", 0, "WindowsÏµÍ³ÁÙÊ
 insert into disk_scan_info values(5108, 51, "Windows_xp_x86", 0, "ÏµÍ³Í¼±ê»º´æ", "System Icon Cache", "%UserProfile%\Local Settings\Application Data","IconCache.db", 0);
 -- insert into disk_scan_info values(5109, 51, "Windows_xp_x86", 0, "ÎŞĞ§¿ì½İ·½Ê½", "Invalid shortcut", "%UserProfile%\AppData\Roaming\Microsoft\Windows\Recent","", 1);
 insert into disk_scan_info values(5110, 51, "Windows_xp_x86", 0, "IEä¯ÀÀÆ÷»º´æ", "IE Cache", "%UserProfile%\Local Settings\Temporary Internet Files","", 1);
+insert into disk_scan_info values(5111, 51, "Windows_xp_x86", 0, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%SystemRoot%\Temp","", 1);
 
 -- windows xp x64
-insert into disk_scan_info values(5250, 52, "Windows_xp_x64", 1, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%UserProfile%\AppData\Local\Temp","", 1);
+insert into disk_scan_info values(5250, 52, "Windows_xp_x64", 1, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%UserProfile%\Local Settings\Temp","", 1);
+insert into disk_scan_info values(5151, 52, "Windows_xp_x64", 1, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%SystemRoot%\Temp","", 1);
 
 -- windows vista x86
 insert into disk_scan_info values(6000, 60, "Windows_vista_x86", 0, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%UserProfile%\AppData\Local\Temp","", 1);
+insert into disk_scan_info values(6001, 60, "Windows_vista_x86", 0, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%SystemRoot%\Temp","", 1);
 
 -- windows vista x64
 insert into disk_scan_info values(6050, 60, "Windows_vista_x64", 1, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%UserProfile%\AppData\Local\Temp","", 1);
+insert into disk_scan_info values(6051, 60, "Windows_vista_x64", 1, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%SystemRoot%\Temp","", 1);
 
 -- windows 7 x86
 insert into disk_scan_info values(6100, 61, "Windows_7_x86", 0, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%UserProfile%\AppData\Local\Temp","", 1);
+insert into disk_scan_info values(6101, 61, "Windows_7_x86", 0, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%SystemRoot%\Temp","", 1);
 
 -- windows 7 x64
 insert into disk_scan_info values(6150, 61, "Windows_7_x64", 1, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%UserProfile%\AppData\Local\Temp","", 1);
+insert into disk_scan_info values(6151, 61, "Windows_7_x64", 1, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%SystemRoot%\Temp","", 1);
 
 -- windows 8 x86
 insert into disk_scan_info values(6200, 62, "Windows_8_x86", 0, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%UserProfile%\AppData\Local\Temp","", 1);
+insert into disk_scan_info values(6201, 62, "Windows_8_x86", 0, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%SystemRoot%\Temp","", 1);
 
 -- windows 8 x64
 insert into disk_scan_info values(6250, 62, "Windows_8_x64", 1, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%UserProfile%\AppData\Local\Temp","", 1);
+insert into disk_scan_info values(6251, 62, "Windows_8_x64", 1, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%SystemRoot%\Temp","", 1);
 
 -- windows 8.1 x86
 insert into disk_scan_info values(6300, 63, "Windows_81_x86", 0, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%UserProfile%\AppData\Local\Temp","", 1);
+insert into disk_scan_info values(6301, 63, "Windows_81_x86", 0, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%SystemRoot%\Temp","", 1);
 
 -- windows 8.1 x64
 insert into disk_scan_info values(6350, 63, "Windows_81_x64", 1, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%UserProfile%\AppData\Local\Temp","", 1);
+insert into disk_scan_info values(6351, 63, "Windows_81_x64", 1, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%SystemRoot%\Temp","", 1);
 
 -- windows 10 x86
 insert into disk_scan_info values(10000, 100, "Windows_10_x86", 0, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%UserProfile%\AppData\Local\Temp","", 1);
@@ -104,9 +114,11 @@ insert into disk_scan_info values(10023, 100, "Windows_10_x86", 0, "IE10ÒÔÉÏä¯ÀÀ
 insert into disk_scan_info values(10024, 100, "Windows_10_x86", 0, "Edgeä¯ÀÀÆ÷»º´æ", "Edge Cache", "%UserProfile%\AppData\Local\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\AC\MicrosoftEdge\Cache","", 1);
 insert into disk_scan_info values(10025, 100, "Windows_10_x86", 0, "»ğºüä¯ÀÀÆ÷»º´æ", "Firefox Cache", "%UserProfile%\AppData\Local\Mozilla\Firefox\Profiles","", 1);
 insert into disk_scan_info values(10026, 100, "Windows_10_x86", 0, "»ğºüä¯ÀÀÆ÷¸üĞÂÈÕÖ¾", "Firefox Update Cache", "%UserProfile%\AppData\Roaming\Mozilla\Firefox\Crash Reports","", 1);
+insert into disk_scan_info values(10027, 100, "Windows_10_x86", 0, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%SystemRoot%\Temp","", 1);
 
 -- windows 10 x64
 insert into disk_scan_info values(10050, 100, "Windows_10_x64", 1, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%UserProfile%\AppData\Local\Temp","", 1);
+insert into disk_scan_info values(10051, 100, "Windows_10_x64", 1, "WindowsÏµÍ³ÁÙÊ±ÎÄ¼ş", "Windows System Temp Files", "%SystemRoot%\Temp","", 1);
 
 -- ///////////////////////////////////////////////////////////////////////////////////////////////
 -- //reg_scan_info
